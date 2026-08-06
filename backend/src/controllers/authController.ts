@@ -8,6 +8,7 @@ import { s3Client, BUCKET_AVATARS } from "../config/minio";
 import { AuthRequest } from "../middlewares/auth";
 
 const JWT_SECRET = process.env.JWT_SECRET || "secret_par_defaut";
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
 
 export const register = async (req: Request, res: Response) => {
   try {
@@ -71,7 +72,7 @@ export const login = async (req: Request, res: Response) => {
     const result = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
     const user = result.rows[0];
 
-    if (!user) {
+    if (!user || !user.password_hash) {
       return res.status(401).json({ message: "Identifiants invalides" });
     }
 
@@ -141,4 +142,13 @@ export const updateAvatar = async (req: AuthRequest, res: Response) => {
     console.error(err);
     res.status(500).json({ message: "Erreur lors de la mise a jour de l avatar" });
   }
+};
+
+export const googleCallback = (req: Request, res: Response) => {
+  const user = req.user as { id: number } | undefined;
+  if (!user) {
+    return res.redirect(`${FRONTEND_URL}/login`);
+  }
+  const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "7d" });
+  res.redirect(`${FRONTEND_URL}/oauth/callback?token=${token}`);
 };

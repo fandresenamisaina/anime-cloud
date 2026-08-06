@@ -1,6 +1,7 @@
 ﻿import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import passport from "./config/passport";
 import { pool } from "./config/db";
 import authRoutes from "./routes/authRoutes";
 import seriesRoutes from "./routes/seriesRoutes";
@@ -16,6 +17,7 @@ const PORT = process.env.PORT || 4000;
 
 app.use(cors());
 app.use(express.json());
+app.use(passport.initialize());
 
 app.get("/", (req, res) => {
   res.json({ message: "Anime Cloud API en ligne" });

@@ -35,55 +35,71 @@ export default function AddSeries() {
   };
 
   return (
-    <div className="p-4 md:p-8 max-w-lg mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Ajouter une serie</h1>
-      {error && (
-        <div className="bg-red-500/10 text-red-400 p-3 rounded-lg mb-4 text-sm">
-          {error}
-        </div>
-      )}
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <input
-          type="text"
-          placeholder="Titre"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="bg-dark-800 border border-dark-700 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-accent-500"
-          required
-        />
-        <textarea
-          placeholder="Description (optionnel)"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          rows={3}
-          className="bg-dark-800 border border-dark-700 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-accent-500 resize-none"
-        />
-        <input
-          type="text"
-          placeholder="Genre (optionnel)"
-          value={genre}
-          onChange={(e) => setGenre(e.target.value)}
-          className="bg-dark-800 border border-dark-700 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-accent-500"
-        />
-        <div>
-          <label className="block text-sm text-gray-400 mb-2">
-            Image de couverture (optionnel)
-          </label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => setCover(e.target.files?.[0] || null)}
-            className="text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-accent-500 file:text-white hover:file:bg-accent-600 file:cursor-pointer cursor-pointer"
-          />
-        </div>
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-accent-500 hover:bg-accent-600 disabled:opacity-50 transition rounded-lg py-3 font-semibold"
-        >
-          {loading ? "Creation..." : "Creer la serie"}
-        </button>
-      </form>
+    <div className="max-w-lg mx-auto px-4 md:px-8 py-10">
+      <h1 className="text-3xl font-extrabold mb-8">Ajouter une serie</h1>
+
+      <div className="bg-dark-800/70 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl shadow-black/40">
+        {error && (
+          <div className="bg-red-500/10 text-red-400 border border-red-500/20 p-3 rounded-lg mb-4 text-sm">
+            {error}
+          </div>
+        )}
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-1.5">Titre</label>
+            <input
+              type="text"
+              placeholder="Titre de la serie"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-full bg-dark-900/60 border border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent transition placeholder:text-gray-500"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-1.5">
+              Description (optionnel)
+            </label>
+            <textarea
+              placeholder="Synopsis"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={3}
+              className="w-full bg-dark-900/60 border border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent transition resize-none placeholder:text-gray-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-1.5">
+              Genre (optionnel)
+            </label>
+            <input
+              type="text"
+              placeholder="Shonen, Action"
+              value={genre}
+              onChange={(e) => setGenre(e.target.value)}
+              className="w-full bg-dark-900/60 border border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent transition placeholder:text-gray-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-1.5">
+              Image de couverture (optionnel)
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setCover(e.target.files?.[0] || null)}
+              className="text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-dark-700 file:text-white hover:file:bg-dark-700/70 file:cursor-pointer cursor-pointer"
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={loading}
+            className="bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-400 hover:opacity-90 disabled:opacity-50 transition rounded-xl py-3 font-semibold shadow-lg shadow-purple-900/30"
+          >
+            {loading ? "Creation..." : "Creer la serie"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

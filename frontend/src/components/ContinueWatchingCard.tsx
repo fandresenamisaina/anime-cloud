@@ -27,19 +27,22 @@ export default function ContinueWatchingCard({ item }: { item: ContinueItem }) {
         seriesTitle: item.series_title,
         seriesId: item.series_id,
       }}
-      className="group relative rounded-xl overflow-hidden bg-dark-800 border border-dark-700 hover:border-accent-500 transition flex-shrink-0 w-56"
+      className="group relative rounded-2xl overflow-hidden bg-dark-800/70 backdrop-blur-xl border border-white/10 hover:border-purple-500/50 transition flex-shrink-0 w-56 shadow-lg shadow-black/20"
     >
-      <div className="aspect-video bg-dark-700 flex items-center justify-center relative">
+      <div className="aspect-video bg-dark-900/60 flex items-center justify-center relative overflow-hidden">
         {item.cover_url ? (
           <img src={item.cover_url} alt={item.series_title} className="w-full h-full object-cover" />
         ) : (
-          <span className="text-3xl opacity-30">?</span>
+          <span className="text-3xl opacity-20">?</span>
         )}
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/40">
-          <div className="h-full bg-accent-500" style={{ width: `${percent}%` }} />
+          <div
+            className="h-full bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-400"
+            style={{ width: `${percent}%` }}
+          />
         </div>
       </div>
-      <div className="p-3">
+      <div className="p-3 border-t border-white/5">
         <p className="font-medium text-sm truncate group-hover:text-accent-500 transition">
           {item.series_title}
         </p>

@@ -77,15 +77,15 @@ export default function Watch() {
   const handleEnded = () => saveProgress(true);
 
   if (loadingProgress) {
-    return <div className="p-8 text-center">Chargement...</div>;
+    return <div className="p-12 text-center text-gray-400">Chargement...</div>;
   }
 
   return (
-    <div className="p-4 md:p-8 max-w-5xl mx-auto">
+    <div className="max-w-5xl mx-auto px-4 md:px-8 py-10">
       <div className="flex items-center gap-3 mb-4">
         <button
           onClick={() => (state.seriesId ? navigate(`/series/${state.seriesId}`) : navigate(-1))}
-          className="text-sm px-3 py-2 rounded-lg bg-dark-800 hover:bg-dark-700 border border-dark-700 transition"
+          className="text-sm px-3 py-2 rounded-xl bg-dark-800/70 backdrop-blur-xl border border-white/10 hover:bg-dark-700/60 transition"
         >
           &larr; Retour
         </button>
@@ -96,7 +96,7 @@ export default function Watch() {
           </div>
         )}
       </div>
-      <div className="rounded-xl overflow-hidden bg-black">
+      <div className="rounded-3xl overflow-hidden bg-black border border-white/10 shadow-2xl shadow-black/40">
         <video
           ref={videoRef}
           src={streamUrl}
@@ -121,7 +121,7 @@ export default function Watch() {
         </video>
       </div>
       {startTime && startTime > 5 && (
-        <p className="text-sm text-gray-500 mt-2">
+        <p className="text-sm text-gray-500 mt-3">
           Reprise a {Math.floor(startTime / 60)}:{String(startTime % 60).padStart(2, "0")}
         </p>
       )}

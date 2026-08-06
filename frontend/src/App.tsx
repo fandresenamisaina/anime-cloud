@@ -13,6 +13,7 @@ import Favorites from "./pages/Favorites";
 import Watchlist from "./pages/Watchlist";
 import Profile from "./pages/Profile";
 import AdminPanel from "./pages/AdminPanel";
+import OAuthCallback from "./pages/OAuthCallback";
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/oauth/callback" element={<OAuthCallback />} />
           <Route
             path="/catalogue"
             element={

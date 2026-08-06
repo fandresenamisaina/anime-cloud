@@ -116,29 +116,41 @@ export default function AdminPanel() {
     }
   };
 
-  if (loading) return <div className="p-8 text-center">Chargement...</div>;
-  if (error) return <div className="p-8 text-center text-red-400">{error}</div>;
+  if (loading) return <div className="p-12 text-center text-gray-400">Chargement...</div>;
+  if (error) return <div className="p-12 text-center text-red-400">{error}</div>;
+
+  const tabs: { key: Tab; label: string }[] = [
+    { key: "users", label: "Utilisateurs" },
+    { key: "content", label: "Contenu" },
+    { key: "storage", label: "Stockage" },
+  ];
 
   return (
-    <div className="p-8 max-w-5xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Administration</h1>
+    <div className="max-w-5xl mx-auto px-4 md:px-8 py-10">
+      <h1 className="text-3xl font-extrabold mb-8">Administration</h1>
 
       {stats && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-dark-800 border border-dark-700 rounded-lg p-4 text-center">
-            <p className="text-2xl font-bold text-accent-500">{stats.totalUsers}</p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div className="bg-dark-800/70 backdrop-blur-xl border border-white/10 rounded-2xl p-4 text-center">
+            <p className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-fuchsia-400 via-purple-400 to-cyan-300">
+              {stats.totalUsers}
+            </p>
             <p className="text-xs text-gray-400 mt-1">Utilisateurs</p>
           </div>
-          <div className="bg-dark-800 border border-dark-700 rounded-lg p-4 text-center">
-            <p className="text-2xl font-bold text-accent-500">{stats.totalSeries}</p>
+          <div className="bg-dark-800/70 backdrop-blur-xl border border-white/10 rounded-2xl p-4 text-center">
+            <p className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-fuchsia-400 via-purple-400 to-cyan-300">
+              {stats.totalSeries}
+            </p>
             <p className="text-xs text-gray-400 mt-1">Series</p>
           </div>
-          <div className="bg-dark-800 border border-dark-700 rounded-lg p-4 text-center">
-            <p className="text-2xl font-bold text-accent-500">{stats.totalEpisodes}</p>
+          <div className="bg-dark-800/70 backdrop-blur-xl border border-white/10 rounded-2xl p-4 text-center">
+            <p className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-fuchsia-400 via-purple-400 to-cyan-300">
+              {stats.totalEpisodes}
+            </p>
             <p className="text-xs text-gray-400 mt-1">Episodes</p>
           </div>
-          <div className="bg-dark-800 border border-dark-700 rounded-lg p-4 text-center">
-            <p className="text-2xl font-bold text-accent-500">
+          <div className="bg-dark-800/70 backdrop-blur-xl border border-white/10 rounded-2xl p-4 text-center">
+            <p className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-fuchsia-400 via-purple-400 to-cyan-300">
               {formatDuration(stats.totalDurationSeconds)}
             </p>
             <p className="text-xs text-gray-400 mt-1">Contenu total</p>
@@ -146,31 +158,20 @@ export default function AdminPanel() {
         </div>
       )}
 
-      <div className="flex gap-2 mb-6 border-b border-dark-700">
-        <button
-          onClick={() => setTab("users")}
-          className={`px-4 py-2 text-sm font-semibold transition ${
-            tab === "users" ? "text-accent-500 border-b-2 border-accent-500" : "text-gray-400"
-          }`}
-        >
-          Utilisateurs
-        </button>
-        <button
-          onClick={() => setTab("content")}
-          className={`px-4 py-2 text-sm font-semibold transition ${
-            tab === "content" ? "text-accent-500 border-b-2 border-accent-500" : "text-gray-400"
-          }`}
-        >
-          Contenu
-        </button>
-        <button
-          onClick={() => setTab("storage")}
-          className={`px-4 py-2 text-sm font-semibold transition ${
-            tab === "storage" ? "text-accent-500 border-b-2 border-accent-500" : "text-gray-400"
-          }`}
-        >
-          Stockage
-        </button>
+      <div className="flex gap-1 mb-8 bg-dark-800/70 backdrop-blur-xl border border-white/10 rounded-xl p-1 w-fit">
+        {tabs.map((t) => (
+          <button
+            key={t.key}
+            onClick={() => setTab(t.key)}
+            className={`px-4 py-2 rounded-lg text-sm font-semibold transition ${
+              tab === t.key
+                ? "bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-400 text-white"
+                : "text-gray-400 hover:text-white"
+            }`}
+          >
+            {t.label}
+          </button>
+        ))}
       </div>
 
       {tab === "users" && (
@@ -178,9 +179,9 @@ export default function AdminPanel() {
           {users.map((u) => (
             <div
               key={u.id}
-              className="bg-dark-800 border border-dark-700 rounded-lg px-4 py-3 flex items-center gap-3"
+              className="bg-dark-800/70 backdrop-blur-xl border border-white/10 rounded-2xl px-4 py-3 flex items-center gap-3"
             >
-              <div className="w-10 h-10 rounded-full bg-dark-700 overflow-hidden flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 rounded-full bg-dark-900/60 border border-white/10 overflow-hidden flex items-center justify-center flex-shrink-0">
                 {u.avatar_url ? (
                   <img src={u.avatar_url} alt={u.username} className="w-full h-full object-cover" />
                 ) : (
@@ -191,7 +192,7 @@ export default function AdminPanel() {
                 <p className="font-semibold">
                   {u.username}{" "}
                   {u.is_admin && (
-                    <span className="text-xs bg-accent-500/20 text-accent-500 px-2 py-0.5 rounded ml-1">
+                    <span className="text-xs bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded ml-1">
                       Admin
                     </span>
                   )}
@@ -200,13 +201,13 @@ export default function AdminPanel() {
               </div>
               <button
                 onClick={() => handleToggleAdmin(u.id)}
-                className="text-xs px-3 py-1 rounded-lg bg-dark-700 hover:bg-dark-700/70 transition"
+                className="text-xs px-3 py-1.5 rounded-lg bg-dark-900/60 border border-white/10 hover:bg-dark-700/60 transition"
               >
                 {u.is_admin ? "Retirer admin" : "Rendre admin"}
               </button>
               <button
                 onClick={() => handleDeleteUser(u.id, u.username)}
-                className="text-xs px-3 py-1 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition"
+                className="text-xs px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition"
               >
                 Supprimer
               </button>
@@ -218,14 +219,14 @@ export default function AdminPanel() {
       {tab === "content" && (
         <div className="flex flex-col gap-2">
           {seriesList.length === 0 ? (
-            <p className="text-gray-400">Aucune serie.</p>
+            <p className="text-gray-500">Aucune serie.</p>
           ) : (
             seriesList.map((s) => (
               <div
                 key={s.id}
-                className="bg-dark-800 border border-dark-700 rounded-lg px-4 py-3 flex items-center gap-3"
+                className="bg-dark-800/70 backdrop-blur-xl border border-white/10 rounded-2xl px-4 py-3 flex items-center gap-3"
               >
-                <div className="w-14 h-20 bg-dark-700 rounded-md overflow-hidden flex items-center justify-center flex-shrink-0">
+                <div className="w-14 h-20 bg-dark-900/60 border border-white/10 rounded-lg overflow-hidden flex items-center justify-center flex-shrink-0">
                   {s.cover_url ? (
                     <img src={s.cover_url} alt={s.title} className="w-full h-full object-cover" />
                   ) : (
@@ -243,7 +244,7 @@ export default function AdminPanel() {
                 </div>
                 <button
                   onClick={() => handleDeleteSeries(s.id, s.title)}
-                  className="text-xs px-3 py-1 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition"
+                  className="text-xs px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition"
                 >
                   Supprimer
                 </button>
@@ -256,9 +257,9 @@ export default function AdminPanel() {
       {tab === "storage" && storage && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {(["avatars", "videos", "covers", "thumbnails"] as const).map((bucket) => (
-            <div key={bucket} className="bg-dark-800 border border-dark-700 rounded-lg p-4">
+            <div key={bucket} className="bg-dark-800/70 backdrop-blur-xl border border-white/10 rounded-2xl p-4">
               <p className="text-sm font-semibold text-gray-300 capitalize mb-1">{bucket}</p>
-              <p className="text-xl font-bold text-accent-500">
+              <p className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-fuchsia-400 via-purple-400 to-cyan-300">
                 {formatBytes(storage[bucket].sizeBytes)}
               </p>
               <p className="text-xs text-gray-500 mt-1">{storage[bucket].count} fichier(s)</p>

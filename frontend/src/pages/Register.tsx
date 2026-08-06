@@ -1,4 +1,4 @@
-Ôªøimport { useState } from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
@@ -49,7 +49,7 @@ export default function Register() {
               Anime<span className="text-accent-500">Cloud</span>
             </h1>
             <p className="text-gray-400 text-sm mt-2">
-              Votre cloud d'anime, gratuit et partag√© entre passionn√©s.
+              Votre cloud d'anime, gratuit et partagÈ entre passionnÈs.
             </p>
           </div>
 
@@ -116,7 +116,7 @@ export default function Register() {
               disabled={loading}
               className="bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-400 hover:opacity-90 transition rounded-xl py-3 font-semibold shadow-lg shadow-purple-900/30 disabled:opacity-60"
             >
-              {loading ? "Cr√©ation..." : "Cr√©er mon compte"}
+              {loading ? "CrÈation..." : "CrÈer mon compte"}
             </button>
           </form>
 
@@ -126,12 +126,7 @@ export default function Register() {
             <div className="h-px bg-white/10 flex-1" />
           </div>
 
-          <button
-            type="button"
-            disabled
-            title="Bient√¥t disponible"
-            className="w-full flex items-center justify-center gap-2 bg-dark-900/60 border border-white/10 rounded-xl py-3 font-medium text-gray-300 opacity-50 cursor-not-allowed"
-          >
+          <a href="http://localhost:4000/api/auth/google" className="w-full flex items-center justify-center gap-2 bg-dark-900/60 border border-white/10 rounded-xl py-3 font-medium text-gray-300 hover:bg-dark-700/60 transition">
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path
                 fill="#EA4335"
@@ -139,10 +134,10 @@ export default function Register() {
               />
             </svg>
             Continuer avec Google
-          </button>
+          </a>
 
           <p className="text-center text-sm text-gray-400 mt-6">
-            D√©j√† un compte ?{" "}
+            DÈj‡ un compte ?{" "}
             <Link to="/login" className="text-accent-500 hover:underline font-medium">
               Se connecter
             </Link>

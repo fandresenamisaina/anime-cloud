@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
@@ -48,7 +48,7 @@ export default function Login() {
               Anime<span className="text-accent-500">Cloud</span>
             </h1>
             <p className="text-gray-400 text-sm mt-2">
-              Votre cloud d'anime, gratuit et partagé entre passionnés.
+              Votre cloud d'anime, gratuit et partag� entre passionn�s.
             </p>
           </div>
 
@@ -112,12 +112,7 @@ export default function Login() {
             <div className="h-px bg-white/10 flex-1" />
           </div>
 
-          <button
-            type="button"
-            disabled
-            title="Bientôt disponible"
-            className="w-full flex items-center justify-center gap-2 bg-dark-900/60 border border-white/10 rounded-xl py-3 font-medium text-gray-300 opacity-50 cursor-not-allowed"
-          >
+          <a href="http://localhost:4000/api/auth/google" className="w-full flex items-center justify-center gap-2 bg-dark-900/60 border border-white/10 rounded-xl py-3 font-medium text-gray-300 hover:bg-dark-700/60 transition">
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path
                 fill="#EA4335"
@@ -125,7 +120,7 @@ export default function Login() {
               />
             </svg>
             Continuer avec Google
-          </button>
+          </a>
 
           <p className="text-center text-sm text-gray-400 mt-6">
             Pas de compte ?{" "}
@@ -138,3 +133,5 @@ export default function Login() {
     </div>
   );
 }
+
+

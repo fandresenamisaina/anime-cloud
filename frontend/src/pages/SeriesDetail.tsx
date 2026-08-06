@@ -1,7 +1,6 @@
 ﻿import { useEffect, useState } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import api from "../api/client";
-import { useAuth } from "../context/AuthContext";
 
 interface Episode {
   id: number;
@@ -9,21 +8,12 @@ interface Episode {
   title: string;
   thumbnail_url: string | null;
   duration_seconds: number | null;
-  uploaded_by: number;
 }
 
 interface Season {
   id: number;
   season_number: number;
   episodes: Episode[];
-  added_by?: number;
-}
-
-interface SeriesData {
-  id: number;
-  title: string;
-  added_by: number;
-  seasons: Season[];
 }
 
 function formatDuration(seconds: number | null): string {
@@ -34,11 +24,8 @@ function formatDuration(seconds: number | null): string {
 
 export default function SeriesDetail() {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const { userId } = useAuth();
   const [seasons, setSeasons] = useState<Season[]>([]);
   const [seriesTitle, setSeriesTitle] = useState("");
-  const [seriesOwnerId, setSeriesOwnerId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
 
   const [isFavorite, setIsFavorite] = useState(false);
@@ -55,14 +42,11 @@ export default function SeriesDetail() {
   const [epError, setEpError] = useState("");
   const [epUploading, setEpUploading] = useState(false);
 
-  const isSeriesOwner = seriesOwnerId !== null && seriesOwnerId === userId;
-
   const fetchSeries = () => {
     api
-      .get<SeriesData>(`/series/${id}`)
+      .get(`/series/${id}`)
       .then((res) => {
         setSeriesTitle(res.data.title);
-        setSeriesOwnerId(res.data.added_by);
         setSeasons(res.data.seasons || []);
       })
       .finally(() => setLoading(false));
@@ -108,16 +92,6 @@ export default function SeriesDetail() {
     }
   };
 
-  const handleDeleteSeries = async () => {
-    if (!confirm("Supprimer cette serie et tout son contenu ?")) return;
-    try {
-      await api.delete(`/series/${id}`);
-      navigate("/");
-    } catch (err: any) {
-      alert(err.response?.data?.message || "Erreur lors de la suppression de la serie");
-    }
-  };
-
   const handleAddSeason = async (e: React.FormEvent) => {
     e.preventDefault();
     setSeasonError("");
@@ -138,8 +112,8 @@ export default function SeriesDetail() {
     try {
       await api.delete(`/series/seasons/${seasonId}`);
       fetchSeries();
-    } catch (err: any) {
-      alert(err.response?.data?.message || "Erreur lors de la suppression de la saison");
+    } catch {
+      alert("Erreur lors de la suppression de la saison");
     }
   };
 
@@ -148,8 +122,8 @@ export default function SeriesDetail() {
     try {
       await api.delete(`/series/episodes/${episodeId}`);
       fetchSeries();
-    } catch (err: any) {
-      alert(err.response?.data?.message || "Erreur lors de la suppression de l episode");
+    } catch {
+      alert("Erreur lors de la suppression de l episode");
     }
   };
 
@@ -186,41 +160,33 @@ export default function SeriesDetail() {
     }
   };
 
-  if (loading) return <div className="p-8 text-center">Chargement...</div>;
+  if (loading) return <div className="p-12 text-center text-gray-400">Chargement...</div>;
 
   return (
-    <div className="p-8 max-w-3xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">{seriesTitle}</h1>
+    <div className="max-w-4xl mx-auto px-4 md:px-8 py-10">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <h1 className="text-3xl font-extrabold">{seriesTitle}</h1>
         <div className="flex gap-2">
           <button
             onClick={toggleFavorite}
-            className={`px-4 py-2 rounded-lg transition ${
+            className={`px-4 py-2 rounded-xl border transition text-sm font-medium ${
               isFavorite
-                ? "bg-accent-500 hover:bg-accent-600"
-                : "bg-dark-700 hover:bg-dark-700/70"
+                ? "bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-400 border-transparent"
+                : "bg-dark-900/60 border-white/10 hover:bg-dark-700/60"
             }`}
           >
             {isFavorite ? "\u2665 Favori" : "\u2661 Favori"}
           </button>
           <button
             onClick={toggleWatchlist}
-            className={`px-4 py-2 rounded-lg transition ${
+            className={`px-4 py-2 rounded-xl border transition text-sm font-medium ${
               isInWatchlist
-                ? "bg-accent-500 hover:bg-accent-600"
-                : "bg-dark-700 hover:bg-dark-700/70"
+                ? "bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-400 border-transparent"
+                : "bg-dark-900/60 border-white/10 hover:bg-dark-700/60"
             }`}
           >
             {isInWatchlist ? "\u2713 Dans ma liste" : "+ A regarder"}
           </button>
-          {isSeriesOwner && (
-            <button
-              onClick={handleDeleteSeries}
-              className="px-4 py-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition"
-            >
-              Supprimer la serie
-            </button>
-          )}
         </div>
       </div>
 
@@ -231,34 +197,30 @@ export default function SeriesDetail() {
               Saison {season.season_number}
             </h2>
             <div className="flex gap-2">
-              {isSeriesOwner && (
-                <>
-                  <button
-                    onClick={() =>
-                      setUploadSeasonId(uploadSeasonId === season.id ? null : season.id)
-                    }
-                    className="text-sm px-3 py-1 rounded-lg bg-dark-700 hover:bg-dark-700/70 transition"
-                  >
-                    {uploadSeasonId === season.id ? "Annuler" : "+ Episode"}
-                  </button>
-                  <button
-                    onClick={() => handleDeleteSeason(season.id)}
-                    className="text-sm px-3 py-1 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition"
-                  >
-                    Supprimer
-                  </button>
-                </>
-              )}
+              <button
+                onClick={() =>
+                  setUploadSeasonId(uploadSeasonId === season.id ? null : season.id)
+                }
+                className="text-sm px-3 py-1.5 rounded-lg bg-dark-900/60 border border-white/10 hover:bg-dark-700/60 transition"
+              >
+                {uploadSeasonId === season.id ? "Annuler" : "+ Episode"}
+              </button>
+              <button
+                onClick={() => handleDeleteSeason(season.id)}
+                className="text-sm px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition"
+              >
+                Supprimer
+              </button>
             </div>
           </div>
 
-          {isSeriesOwner && uploadSeasonId === season.id && (
+          {uploadSeasonId === season.id && (
             <form
               onSubmit={handleAddEpisode}
-              className="bg-dark-800 border border-dark-700 rounded-lg p-4 mb-3 flex flex-col gap-3"
+              className="bg-dark-800/70 backdrop-blur-xl border border-white/10 rounded-2xl p-5 mb-3 flex flex-col gap-3"
             >
               {epError && (
-                <div className="bg-red-500/10 text-red-400 p-2 rounded text-sm">
+                <div className="bg-red-500/10 text-red-400 border border-red-500/20 p-2 rounded-lg text-sm">
                   {epError}
                 </div>
               )}
@@ -267,7 +229,7 @@ export default function SeriesDetail() {
                 placeholder="Numero de l episode"
                 value={epNumber}
                 onChange={(e) => setEpNumber(e.target.value)}
-                className="bg-dark-700 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-accent-500"
+                className="bg-dark-900/60 border border-white/10 rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent transition"
                 required
               />
               <input
@@ -275,7 +237,7 @@ export default function SeriesDetail() {
                 placeholder="Titre (optionnel)"
                 value={epTitle}
                 onChange={(e) => setEpTitle(e.target.value)}
-                className="bg-dark-700 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-accent-500"
+                className="bg-dark-900/60 border border-white/10 rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent transition"
               />
               <div>
                 <label className="text-xs text-gray-400 mb-1 block">Fichier video</label>
@@ -283,7 +245,7 @@ export default function SeriesDetail() {
                   type="file"
                   accept="video/*"
                   onChange={(e) => setEpFile(e.target.files?.[0] || null)}
-                  className="text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-accent-500 file:text-white hover:file:bg-accent-600 file:cursor-pointer cursor-pointer"
+                  className="text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-gradient-to-r file:from-fuchsia-500 file:via-purple-500 file:to-cyan-400 file:text-white hover:file:opacity-90 file:cursor-pointer cursor-pointer"
                   required
                 />
               </div>
@@ -295,13 +257,13 @@ export default function SeriesDetail() {
                   type="file"
                   accept=".srt"
                   onChange={(e) => setEpSubtitleFile(e.target.files?.[0] || null)}
-                  className="text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-dark-700 file:text-white hover:file:bg-dark-700/70 file:cursor-pointer cursor-pointer"
+                  className="text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-dark-700 file:text-white hover:file:bg-dark-700/70 file:cursor-pointer cursor-pointer"
                 />
               </div>
               <button
                 type="submit"
                 disabled={epUploading}
-                className="bg-accent-500 hover:bg-accent-600 disabled:opacity-50 transition rounded-lg py-2 font-semibold"
+                className="bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-400 hover:opacity-90 disabled:opacity-50 transition rounded-xl py-2.5 font-semibold shadow-lg shadow-purple-900/30"
               >
                 {epUploading ? "Upload en cours..." : "Ajouter l episode"}
               </button>
@@ -315,7 +277,7 @@ export default function SeriesDetail() {
               season.episodes.map((ep) => (
                 <div
                   key={ep.id}
-                  className="bg-dark-800 hover:bg-dark-700 border border-dark-700 rounded-lg px-4 py-3 transition flex items-center gap-3"
+                  className="bg-dark-800/70 backdrop-blur-xl hover:border-accent-500/60 border border-white/10 rounded-2xl px-4 py-3 transition flex items-center gap-3"
                 >
                   <Link
                     to={`/watch/${ep.id}`}
@@ -326,7 +288,7 @@ export default function SeriesDetail() {
                     }}
                     className="flex items-center gap-3 flex-1"
                   >
-                    <div className="w-24 aspect-video bg-dark-700 rounded-md overflow-hidden flex items-center justify-center flex-shrink-0">
+                    <div className="w-24 aspect-video bg-dark-700 rounded-xl overflow-hidden flex items-center justify-center flex-shrink-0 border border-white/10">
                       {ep.thumbnail_url ? (
                         <img
                           src={ep.thumbnail_url}
@@ -347,14 +309,12 @@ export default function SeriesDetail() {
                       </span>
                     )}
                   </Link>
-                  {isSeriesOwner && (
-                    <button
-                      onClick={() => handleDeleteEpisode(ep.id)}
-                      className="text-xs px-2 py-1 rounded bg-red-500/10 text-red-400 hover:bg-red-500/20 transition"
-                    >
-                      Supprimer
-                    </button>
-                  )}
+                  <button
+                    onClick={() => handleDeleteEpisode(ep.id)}
+                    className="text-xs px-2 py-1 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition"
+                  >
+                    Supprimer
+                  </button>
                 </div>
               ))
             )}
@@ -362,34 +322,32 @@ export default function SeriesDetail() {
         </div>
       ))}
 
-      {isSeriesOwner && (
-        <div className="mt-8 pt-6 border-t border-dark-700">
-          <h3 className="text-sm font-semibold text-gray-400 mb-3">
-            Ajouter une saison
-          </h3>
-          {seasonError && (
-            <div className="bg-red-500/10 text-red-400 p-2 rounded text-sm mb-2">
-              {seasonError}
-            </div>
-          )}
-          <form onSubmit={handleAddSeason} className="flex gap-2">
-            <input
-              type="number"
-              placeholder="Numero de saison"
-              value={newSeasonNumber}
-              onChange={(e) => setNewSeasonNumber(e.target.value)}
-              className="bg-dark-800 border border-dark-700 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-accent-500 flex-1"
-              required
-            />
-            <button
-              type="submit"
-              className="bg-accent-500 hover:bg-accent-600 transition rounded-lg px-4 py-2 font-semibold"
-            >
-              Ajouter
-            </button>
-          </form>
-        </div>
-      )}
+      <div className="mt-10 pt-6 border-t border-white/10">
+        <h3 className="text-sm font-semibold text-gray-400 mb-3 uppercase tracking-wider">
+          Ajouter une saison
+        </h3>
+        {seasonError && (
+          <div className="bg-red-500/10 text-red-400 border border-red-500/20 p-2 rounded-lg text-sm mb-2">
+            {seasonError}
+          </div>
+        )}
+        <form onSubmit={handleAddSeason} className="flex gap-2">
+          <input
+            type="number"
+            placeholder="Numero de saison"
+            value={newSeasonNumber}
+            onChange={(e) => setNewSeasonNumber(e.target.value)}
+            className="bg-dark-800/70 backdrop-blur-xl border border-white/10 rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent transition flex-1"
+            required
+          />
+          <button
+            type="submit"
+            className="bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-400 hover:opacity-90 transition rounded-xl px-4 py-2 font-semibold shadow-lg shadow-purple-900/30"
+          >
+            Ajouter
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

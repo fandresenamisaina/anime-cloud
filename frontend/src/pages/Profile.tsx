@@ -24,7 +24,6 @@ export default function Profile() {
       .get<UserProfile>("/auth/me")
       .then((res) => setUser(res.data))
       .catch((err) => {
-        console.error("Erreur /auth/me:", err.response?.status, err.response?.data);
         setLoadError(
           err.response?.data?.message ||
             `Erreur ${err.response?.status || ""} lors du chargement du profil`
@@ -57,23 +56,25 @@ export default function Profile() {
     }
   };
 
-  if (loading) return <div className="p-8 text-center">Chargement...</div>;
+  if (loading) return <div className="p-12 text-center text-gray-400">Chargement...</div>;
 
   if (!user) {
     return (
-      <div className="p-8 text-center text-red-400">
-        <p>Profil introuvable</p>
-        {loadError && <p className="text-sm text-gray-500 mt-2">{loadError}</p>}
+      <div className="max-w-xl mx-auto px-4 py-16 text-center">
+        <div className="bg-dark-800/70 backdrop-blur-xl border border-red-500/20 rounded-2xl p-8">
+          <p className="text-red-400 font-medium">Profil introuvable</p>
+          {loadError && <p className="text-sm text-gray-500 mt-2">{loadError}</p>}
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="p-8 max-w-xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Mon profil</h1>
+    <div className="max-w-xl mx-auto px-4 md:px-8 py-10">
+      <h1 className="text-3xl font-extrabold mb-8">Mon profil</h1>
 
-      <div className="bg-dark-800 border border-dark-700 rounded-xl p-6 flex flex-col items-center gap-4">
-        <div className="w-32 h-32 rounded-full bg-dark-700 overflow-hidden flex items-center justify-center">
+      <div className="bg-dark-800/70 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl shadow-black/40 flex flex-col items-center gap-4">
+        <div className="w-32 h-32 rounded-full bg-dark-900/60 border border-white/10 overflow-hidden flex items-center justify-center">
           {user.avatar_url ? (
             <img
               src={user.avatar_url}
@@ -95,19 +96,21 @@ export default function Profile() {
 
         <form onSubmit={handleAvatarChange} className="w-full flex flex-col gap-3 mt-4">
           {error && (
-            <div className="bg-red-500/10 text-red-400 p-2 rounded text-sm">{error}</div>
+            <div className="bg-red-500/10 text-red-400 border border-red-500/20 p-3 rounded-lg text-sm">
+              {error}
+            </div>
           )}
           <label className="text-xs text-gray-400 block">Changer l avatar</label>
           <input
             type="file"
             accept="image/*"
             onChange={(e) => setAvatarFile(e.target.files?.[0] || null)}
-            className="text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-accent-500 file:text-white hover:file:bg-accent-600 file:cursor-pointer cursor-pointer"
+            className="text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-gradient-to-r file:from-fuchsia-500 file:via-purple-500 file:to-cyan-400 file:text-white hover:file:opacity-90 file:cursor-pointer cursor-pointer"
           />
           <button
             type="submit"
             disabled={!avatarFile || uploading}
-            className="bg-accent-500 hover:bg-accent-600 disabled:opacity-50 transition rounded-lg py-2 font-semibold"
+            className="bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-400 hover:opacity-90 disabled:opacity-50 transition rounded-xl py-2.5 font-semibold shadow-lg shadow-purple-900/30"
           >
             {uploading ? "Envoi en cours..." : "Mettre a jour l avatar"}
           </button>
