@@ -2,7 +2,7 @@
 import { useAuth } from "../context/AuthContext";
 
 export default function Navbar() {
-  const { token, logout } = useAuth();
+  const { token, isAdmin, logout } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -59,12 +59,14 @@ export default function Navbar() {
             >
               Profil
             </Link>
-            <Link
-              to="/admin"
-              className="hidden md:flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition"
-            >
-              Admin
-            </Link>
+            {isAdmin && (
+              <Link
+                to="/admin"
+                className="hidden md:flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition"
+              >
+                Admin
+              </Link>
+            )}
             <Link
               to="/series/new"
               className="px-4 py-2 rounded-xl text-sm font-semibold bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-400 hover:opacity-90 transition shadow-lg shadow-purple-900/30"

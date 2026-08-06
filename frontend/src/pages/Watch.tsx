@@ -120,6 +120,9 @@ export default function Watch() {
           Ton navigateur ne supporte pas la lecture video.
         </video>
       </div>
+      <p className="text-sm text-gray-500 mt-3">
+        Pour télécharger, cliquez sur les trois points verticaux
+      </p>
       {startTime && startTime > 5 && (
         <p className="text-sm text-gray-500 mt-3">
           Reprise a {Math.floor(startTime / 60)}:{String(startTime % 60).padStart(2, "0")}

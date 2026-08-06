@@ -52,7 +52,7 @@ export const register = async (req: Request, res: Response) => {
 
     const user = result.rows[0];
 
-    const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "7d" });
+    const token = jwt.sign({ userId: user.id, isAdmin: user.is_admin || false }, JWT_SECRET, { expiresIn: "7d" });
 
     res.status(201).json({ user, token });
   } catch (err) {
@@ -81,7 +81,7 @@ export const login = async (req: Request, res: Response) => {
       return res.status(401).json({ message: "Identifiants invalides" });
     }
 
-    const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "7d" });
+    const token = jwt.sign({ userId: user.id, isAdmin: user.is_admin || false }, JWT_SECRET, { expiresIn: "7d" });
 
     res.json({
       user: {
@@ -145,10 +145,10 @@ export const updateAvatar = async (req: AuthRequest, res: Response) => {
 };
 
 export const googleCallback = (req: Request, res: Response) => {
-  const user = req.user as { id: number } | undefined;
+  const user = req.user as { id: number; is_admin?: boolean } | undefined;
   if (!user) {
     return res.redirect(`${FRONTEND_URL}/login`);
   }
-  const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "7d" });
+  const token = jwt.sign({ userId: user.id, isAdmin: user.is_admin || false }, JWT_SECRET, { expiresIn: "7d" });
   res.redirect(`${FRONTEND_URL}/oauth/callback?token=${token}`);
 };

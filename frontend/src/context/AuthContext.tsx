@@ -5,6 +5,7 @@ import api from "../api/client";
 interface AuthContextType {
   token: string | null;
   userId: number | null;
+  isAdmin: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (username: string, email: string, password: string) => Promise<void>;
   loginWithToken: (token: string) => void;
@@ -23,15 +24,27 @@ function decodeUserId(token: string | null): number | null {
   }
 }
 
+function decodeIsAdmin(token: string | null): boolean {
+  if (!token) return false;
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    return payload.isAdmin ?? false;
+  } catch {
+    return false;
+  }
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setTokenState] = useState<string | null>(
     localStorage.getItem("token")
   );
   const [userId, setUserId] = useState<number | null>(decodeUserId(token));
+  const [isAdmin, setIsAdmin] = useState<boolean>(decodeIsAdmin(token));
 
   const setToken = (newToken: string | null) => {
     setTokenState(newToken);
     setUserId(decodeUserId(newToken));
+    setIsAdmin(decodeIsAdmin(newToken));
   };
 
   const login = async (email: string, password: string) => {
@@ -57,7 +70,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ token, userId, login, register, loginWithToken, logout }}>
+    <AuthContext.Provider value={{ token, userId, isAdmin, login, register, loginWithToken, logout }}>
       {children}
     </AuthContext.Provider>
   );
