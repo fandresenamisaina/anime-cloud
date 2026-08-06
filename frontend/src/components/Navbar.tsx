@@ -180,12 +180,11 @@ export default function Navbar() {
 
       {/* Mobile Menu Overlay */}
       <div
-        className={`fixed inset-0 bg-dark-900/95 backdrop-blur-xl z-40 md:hidden transition-all duration-300 ease-in-out ${
-          isMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"
+        className={`fixed left-0 right-0 bg-dark-900/98 backdrop-blur-xl z-30 md:hidden transition-all duration-300 ease-in-out border-b border-red-900/30 ${
+          isMenuOpen ? "opacity-100 visible top-[72px]" : "opacity-0 invisible top-[50px]"
         }`}
-        style={{ top: "73px" }}
       >
-        <div className="flex flex-col py-4">
+        <div className="flex flex-col py-4 max-h-[calc(100vh-72px)] overflow-y-auto">
           {menuItems}
         </div>
       </div>
