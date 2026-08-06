@@ -113,7 +113,7 @@ function EpisodeRow({ episode, onDelete }: EpisodeRowProps) {
         </div>
         <button
           onClick={handleWatch}
-          className="text-xs px-3 py-1.5 rounded-lg bg-purple-500/10 text-purple-400 border border-purple-500/20 hover:bg-purple-500/20 transition"
+          className="text-xs px-3 py-1.5 rounded-lg bg-red-600/10 text-red-400 border border-red-600/20 hover:bg-red-600/20 transition"
         >
           Voir
         </button>
@@ -124,7 +124,7 @@ function EpisodeRow({ episode, onDelete }: EpisodeRowProps) {
             link.download = `${episode.series_title}_S${episode.season_number}E${episode.episode_number}.mp4`;
             link.click();
           }}
-          className="text-xs px-3 py-1.5 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 hover:bg-cyan-500/20 transition"
+          className="text-xs px-3 py-1.5 rounded-lg bg-red-600/10 text-red-400 border border-red-600/20 hover:bg-red-600/20 transition"
         >
           Telecharger
         </button>
@@ -256,25 +256,25 @@ export default function AdminPanel() {
       {stats && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-dark-800/70 backdrop-blur-xl border border-white/10 rounded-2xl p-4 text-center">
-            <p className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-fuchsia-400 via-purple-400 to-cyan-300">
+            <p className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-red-500 via-red-600 to-red-400">
               {stats.totalUsers}
             </p>
             <p className="text-xs text-gray-400 mt-1">Utilisateurs</p>
           </div>
           <div className="bg-dark-800/70 backdrop-blur-xl border border-white/10 rounded-2xl p-4 text-center">
-            <p className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-fuchsia-400 via-purple-400 to-cyan-300">
+            <p className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-red-500 via-red-600 to-red-400">
               {stats.totalSeries}
             </p>
             <p className="text-xs text-gray-400 mt-1">Series</p>
           </div>
           <div className="bg-dark-800/70 backdrop-blur-xl border border-white/10 rounded-2xl p-4 text-center">
-            <p className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-fuchsia-400 via-purple-400 to-cyan-300">
+            <p className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-red-500 via-red-600 to-red-400">
               {stats.totalEpisodes}
             </p>
             <p className="text-xs text-gray-400 mt-1">Episodes</p>
           </div>
           <div className="bg-dark-800/70 backdrop-blur-xl border border-white/10 rounded-2xl p-4 text-center">
-            <p className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-fuchsia-400 via-purple-400 to-cyan-300">
+            <p className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-red-500 via-red-600 to-red-400">
               {formatDuration(stats.totalDurationSeconds)}
             </p>
             <p className="text-xs text-gray-400 mt-1">Contenu total</p>
@@ -289,7 +289,7 @@ export default function AdminPanel() {
             onClick={() => setTab(t.key)}
             className={`px-4 py-2 rounded-lg text-sm font-semibold transition ${
               tab === t.key
-                ? "bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-400 text-white"
+                ? "bg-gradient-to-r from-red-600 via-red-700 to-red-500 text-white"
                 : "text-gray-400 hover:text-white"
             }`}
           >
@@ -316,7 +316,7 @@ export default function AdminPanel() {
                 <p className="font-semibold">
                   {u.username}{" "}
                   {u.is_admin && (
-                    <span className="text-xs bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded ml-1">
+                    <span className="text-xs bg-red-600/20 text-red-300 px-2 py-0.5 rounded ml-1">
                       Admin
                     </span>
                   )}
@@ -395,7 +395,7 @@ export default function AdminPanel() {
           {(["avatars", "videos", "covers", "thumbnails"] as const).map((bucket) => (
             <div key={bucket} className="bg-dark-800/70 backdrop-blur-xl border border-white/10 rounded-2xl p-4">
               <p className="text-sm font-semibold text-gray-300 capitalize mb-1">{bucket}</p>
-              <p className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-fuchsia-400 via-purple-400 to-cyan-300">
+              <p className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-red-500 via-red-600 to-red-400">
                 {formatBytes(storage[bucket].sizeBytes)}
               </p>
               <p className="text-xs text-gray-500 mt-1">{storage[bucket].count} fichier(s)</p>

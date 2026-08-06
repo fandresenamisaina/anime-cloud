@@ -52,7 +52,7 @@ export default function AddSeries() {
               placeholder="Titre de la serie"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full bg-dark-900/60 border border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent transition placeholder:text-gray-500"
+              className="w-full bg-dark-900/60 border border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent transition placeholder:text-gray-500"
               required
             />
           </div>
@@ -65,7 +65,7 @@ export default function AddSeries() {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
-              className="w-full bg-dark-900/60 border border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent transition resize-none placeholder:text-gray-500"
+              className="w-full bg-dark-900/60 border border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent transition resize-none placeholder:text-gray-500"
             />
           </div>
           <div>
@@ -77,7 +77,7 @@ export default function AddSeries() {
               placeholder="Shonen, Action"
               value={genre}
               onChange={(e) => setGenre(e.target.value)}
-              className="w-full bg-dark-900/60 border border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent transition placeholder:text-gray-500"
+              className="w-full bg-dark-900/60 border border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent transition placeholder:text-gray-500"
             />
           </div>
           <div>
@@ -94,7 +94,7 @@ export default function AddSeries() {
           <button
             type="submit"
             disabled={loading}
-            className="bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-400 hover:opacity-90 disabled:opacity-50 transition rounded-xl py-3 font-semibold shadow-lg shadow-purple-900/30"
+            className="bg-gradient-to-r from-red-600 via-red-700 to-red-500 hover:opacity-90 disabled:opacity-50 transition rounded-xl py-3 font-semibold shadow-lg shadow-red-900/30"
           >
             {loading ? "Creation..." : "Creer la serie"}
           </button>

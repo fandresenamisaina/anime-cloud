@@ -47,8 +47,8 @@ export default function Landing() {
         </div>
 
         <div className="relative max-w-5xl mx-auto px-6 pt-28 pb-32 flex flex-col items-center text-center">
-          <img src="/favicon.svg" alt="AnimeShare Logo" className="w-16 h-16 mb-6" />
-          <span className="text-xs uppercase tracking-widest text-accent-500 font-semibold mb-4">
+          <img src="/assets/logo.png" alt="AnimeShare Logo" className="w-16 h-16 mb-6" />
+          <span className="text-xs uppercase tracking-widest text-red-500 font-semibold mb-4">
             Cloud personnel AnimeShare
           </span>
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight max-w-3xl">
@@ -63,13 +63,13 @@ export default function Landing() {
           <div className="mt-8 flex flex-col sm:flex-row gap-4">
             <Link
               to="/register"
-              className="px-6 py-3 rounded-lg bg-accent-500 hover:bg-accent-600 transition font-semibold"
+              className="px-6 py-3 rounded-lg bg-red-600 hover:bg-red-700 transition font-semibold"
             >
               Commencer gratuitement
             </Link>
             <Link
               to="/login"
-              className="px-6 py-3 rounded-lg bg-dark-700 border border-dark-700 hover:bg-dark-700/70 transition font-semibold"
+              className="px-6 py-3 rounded-lg bg-dark-700 border border-red-900/30 hover:bg-dark-700/70 transition font-semibold"
             >
               Se connecter
             </Link>
@@ -85,7 +85,7 @@ export default function Landing() {
           {features.map((f) => (
             <div
               key={f.title}
-              className="bg-dark-800 border border-dark-700 rounded-2xl p-6 hover:border-accent-500/50 transition"
+              className="bg-dark-800 border border-dark-700 rounded-2xl p-6 hover:border-red-600/50 transition"
             >
               <div className="text-3xl mb-4">{f.icon}</div>
               <h3 className="font-semibold text-lg mb-2">{f.title}</h3>
@@ -106,7 +106,7 @@ export default function Landing() {
           </p>
           <Link
             to="/register"
-            className="inline-block px-8 py-3 rounded-lg bg-accent-500 hover:bg-accent-600 transition font-semibold"
+            className="inline-block px-8 py-3 rounded-lg bg-red-600 hover:bg-red-700 transition font-semibold"
           >
             Creer mon compte
           </Link>

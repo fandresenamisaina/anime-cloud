@@ -80,7 +80,7 @@ export default function Library() {
           placeholder="Rechercher un anime..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full bg-dark-800/70 backdrop-blur-xl border border-white/10 rounded-2xl pl-12 pr-4 py-3.5 outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent transition placeholder:text-gray-500"
+          className="w-full bg-dark-800/70 backdrop-blur-xl border border-white/10 rounded-2xl pl-12 pr-4 py-3.5 outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent transition placeholder:text-gray-500"
         />
       </div>
 

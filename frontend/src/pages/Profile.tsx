@@ -144,12 +144,12 @@ export default function Profile() {
             type="file"
             accept="image/*"
             onChange={(e) => setAvatarFile(e.target.files?.[0] || null)}
-            className="text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-gradient-to-r file:from-fuchsia-500 file:via-purple-500 file:to-cyan-400 file:text-white hover:file:opacity-90 file:cursor-pointer cursor-pointer"
+            className="text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-gradient-to-r file:from-red-600 file:via-red-700 file:to-red-500 file:text-white hover:file:opacity-90 file:cursor-pointer cursor-pointer"
           />
           <button
             type="submit"
             disabled={!avatarFile || uploading}
-            className="bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-400 hover:opacity-90 disabled:opacity-50 transition rounded-xl py-2.5 font-semibold shadow-lg shadow-purple-900/30"
+            className="bg-gradient-to-r from-red-600 via-red-700 to-red-500 hover:opacity-90 disabled:opacity-50 transition rounded-xl py-2.5 font-semibold shadow-lg shadow-red-900/30"
           >
             {uploading ? "Envoi en cours..." : "Mettre a jour l avatar"}
           </button>
@@ -171,7 +171,7 @@ export default function Profile() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Laisser vide pour ne pas changer"
-              className="w-full bg-dark-900/60 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+              className="w-full bg-dark-900/60 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600/50"
             />
           </div>
           <div>
@@ -182,7 +182,7 @@ export default function Profile() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Laisser vide pour ne pas changer"
-                className="w-full bg-dark-900/60 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 pr-10"
+                className="w-full bg-dark-900/60 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600/50 pr-10"
               />
               <button
                 type="button"
@@ -201,7 +201,7 @@ export default function Profile() {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Confirmer le nouveau mot de passe"
-                className="w-full bg-dark-900/60 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 pr-10"
+                className="w-full bg-dark-900/60 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600/50 pr-10"
               />
               <button
                 type="button"
@@ -215,7 +215,7 @@ export default function Profile() {
           <button
             type="submit"
             disabled={updatingProfile || (!username.trim() && !password)}
-            className="bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-400 hover:opacity-90 disabled:opacity-50 transition rounded-xl py-2.5 font-semibold shadow-lg shadow-purple-900/30"
+            className="bg-gradient-to-r from-red-600 via-red-700 to-red-500 hover:opacity-90 disabled:opacity-50 transition rounded-xl py-2.5 font-semibold shadow-lg shadow-red-900/30"
           >
             {updatingProfile ? "Mise a jour..." : "Mettre a jour le profil"}
           </button>
