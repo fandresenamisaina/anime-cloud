@@ -1,17 +1,64 @@
-```
+```gitignore
 # Dependencies
 node_modules/
 
-# Environment
+# Build outputs
+dist/
+build/
+*.js.map
+*.ts.map
+
+# Environment variables
 .env
 .env.local
 *.env.*
 
-# Logs and temp files
+# Logs
 *.log
-*.tmp
 
-# Editors
+# Coverage reports
+coverage/
+htmlcov/
+*.coverage
+
+# IDE files
 .vscode/
 .idea/
+*.swp
+*.swo
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.nox/
+*.so
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Icon?
 ```
+
+Wait, let me reconsider. The only modified file is a TypeScript React component (`frontend/src/pages/Profile.tsx`). There are no build artifacts, dependency directories, or temporary files in the changes. This appears to be just source code modification.
+
+(empty)
