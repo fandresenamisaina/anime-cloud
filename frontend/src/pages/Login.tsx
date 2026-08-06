@@ -31,22 +31,9 @@ export default function Login() {
         <div className="bg-dark-800/70 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl shadow-black/40">
           {/* Logo */}
           <div className="flex flex-col items-center text-center mb-8">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-fuchsia-500 via-purple-500 to-cyan-400 flex items-center justify-center mb-4 shadow-lg shadow-purple-900/40">
-              <svg
-                className="w-8 h-8 text-white"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <rect x="3" y="4" width="18" height="16" rx="2" />
-                <path d="M7 4v16M17 4v16M3 9h4M17 9h4M3 15h4M17 15h4" />
-              </svg>
-            </div>
+            <img src="/favicon.svg" alt="AnimeShare Logo" className="w-16 h-16 mb-4" />
             <h1 className="text-2xl font-extrabold">
-              Anime<span className="text-accent-500">Cloud</span>
+              Anime<span className="text-accent-500">Share</span>
             </h1>
             <p className="text-gray-400 text-sm mt-2">
               Votre cloud d'anime, gratuit et partagé entre passionnés.
