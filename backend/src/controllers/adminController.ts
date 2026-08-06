@@ -79,7 +79,14 @@ export const getAllEpisodesAdmin = async (req: AuthRequest, res: Response) => {
        LEFT JOIN users u ON u.id = e.uploaded_by
        ORDER BY e.created_at DESC`
     );
-    res.json(result.rows);
+    
+    // Convertir les URLs MinIO en URLs de streaming
+    const episodesWithStreamUrl = result.rows.map((episode) => ({
+      ...episode,
+      stream_url: `http://localhost:4000/api/stream/${episode.id}`
+    }));
+    
+    res.json(episodesWithStreamUrl);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Erreur lors de la recuperation des episodes" });
