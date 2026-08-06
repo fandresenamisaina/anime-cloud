@@ -33,7 +33,7 @@ export default function Login() {
           <div className="flex flex-col items-center text-center mb-8">
             <img src="/favicon.svg" alt="AnimeShare Logo" className="w-16 h-16 mb-4" />
             <h1 className="text-2xl font-extrabold">
-              Anime<span className="text-accent-500">Share</span>
+              Anime<span className="text-red-500">Share</span>
             </h1>
             <p className="text-gray-400 text-sm mt-2">
               Votre cloud d'anime, gratuit et partagé entre passionnés.
@@ -69,7 +69,7 @@ export default function Login() {
                 placeholder="vous@exemple.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-dark-900/60 border border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent transition placeholder:text-gray-500"
+                className="w-full bg-dark-900/60 border border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent transition placeholder:text-gray-500"
                 required
               />
             </div>
@@ -82,7 +82,7 @@ export default function Login() {
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-dark-900/60 border border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent transition"
+                  className="w-full bg-dark-900/60 border border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent transition"
                   required
                 />
                 <button
@@ -97,7 +97,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-400 hover:opacity-90 transition rounded-xl py-3 font-semibold shadow-lg shadow-purple-900/30 disabled:opacity-60"
+              className="bg-gradient-to-r from-red-600 via-red-700 to-red-500 hover:opacity-90 transition rounded-xl py-3 font-semibold shadow-lg shadow-red-900/30 disabled:opacity-60"
             >
               {loading ? "Connexion..." : "Se connecter"}
             </button>
@@ -121,7 +121,7 @@ export default function Login() {
 
           <p className="text-center text-sm text-gray-400 mt-6">
             Pas de compte ?{" "}
-            <Link to="/register" className="text-accent-500 hover:underline font-medium">
+            <Link to="/register" className="text-red-500 hover:underline font-medium">
               S'inscrire
             </Link>
           </p>

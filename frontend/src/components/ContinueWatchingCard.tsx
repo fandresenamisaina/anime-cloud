@@ -27,7 +27,7 @@ export default function ContinueWatchingCard({ item }: { item: ContinueItem }) {
         seriesTitle: item.series_title,
         seriesId: item.series_id,
       }}
-      className="group relative rounded-2xl overflow-hidden bg-dark-800/70 backdrop-blur-xl border border-white/10 hover:border-purple-500/50 transition flex-shrink-0 w-56 shadow-lg shadow-black/20"
+      className="group relative rounded-2xl overflow-hidden bg-dark-800/70 backdrop-blur-xl border border-white/10 hover:border-red-600/50 transition flex-shrink-0 w-56 shadow-lg shadow-black/20"
     >
       <div className="aspect-video bg-dark-900/60 flex items-center justify-center relative overflow-hidden">
         {item.cover_url ? (
@@ -37,13 +37,13 @@ export default function ContinueWatchingCard({ item }: { item: ContinueItem }) {
         )}
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/40">
           <div
-            className="h-full bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-400"
+            className="h-full bg-gradient-to-r from-red-600 via-red-700 to-red-500"
             style={{ width: `${percent}%` }}
           />
         </div>
       </div>
       <div className="p-3 border-t border-white/5">
-        <p className="font-medium text-sm truncate group-hover:text-accent-500 transition">
+        <p className="font-medium text-sm truncate group-hover:text-red-500 transition">
           {item.series_title}
         </p>
         <p className="text-xs text-gray-400 truncate">

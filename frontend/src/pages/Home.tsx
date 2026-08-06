@@ -44,14 +44,14 @@ export default function Home() {
                 <div className="absolute inset-0 bg-gradient-to-b from-dark-900/20 via-dark-900/40 to-dark-900" />
 
                 <div className="relative z-10 max-w-4xl mx-auto pt-16 pb-20">
-                    <span className="inline-block px-4 py-1.5 rounded-full text-xs tracking-widest uppercase text-purple-200/90 bg-white/5 border border-white/10 mb-8">
+                    <span className="inline-block px-4 py-1.5 rounded-full text-xs tracking-widest uppercase text-red-200/90 bg-white/5 border border-white/10 mb-8">
                         Cloud personnel AnimeShare
                     </span>
 
                     <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight">
                         Vos animes, en ligne.
                     </h1>
-                    <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight bg-clip-text text-transparent bg-gradient-to-r from-fuchsia-500 via-purple-400 to-cyan-300 mt-1">
+                    <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight bg-clip-text text-transparent bg-gradient-to-r from-red-600 via-red-600 to-red-400 mt-1">
                         Votre disque dur, libéré.
                     </h2>
 
@@ -63,7 +63,7 @@ export default function Home() {
                     <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
                         <Link
                             to={token ? "/catalogue" : "/register"}
-                            className="px-8 py-3.5 rounded-xl font-semibold bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-400 hover:opacity-90 transition shadow-lg shadow-purple-900/40"
+                            className="px-8 py-3.5 rounded-xl font-semibold bg-gradient-to-r from-red-600 via-red-700 to-red-500 hover:opacity-90 transition shadow-lg shadow-red-900/40"
                         >
                             {token ? "Ouvrir le catalogue" : "Commencer gratuitement"}
                         </Link>
@@ -87,10 +87,10 @@ export default function Home() {
                     {FEATURES.map((f) => (
                         <div
                             key={f.title}
-                            className="rounded-2xl border border-white/10 bg-dark-800/60 p-6 hover:border-purple-500/40 transition"
+                            className="rounded-2xl border border-white/10 bg-dark-800/60 p-6 hover:border-red-600/40 transition"
                         >
                             <svg
-                                className="w-7 h-7 text-purple-400 mb-4"
+                                className="w-7 h-7 text-red-400 mb-4"
                                 viewBox="0 0 24 24"
                                 fill="none"
                                 stroke="currentColor"
@@ -119,7 +119,7 @@ export default function Home() {
                     </p>
                     <Link
                         to="/register"
-                        className="inline-block px-8 py-3.5 rounded-xl font-semibold bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-400 hover:opacity-90 transition shadow-lg shadow-purple-900/40"
+                        className="inline-block px-8 py-3.5 rounded-xl font-semibold bg-gradient-to-r from-red-600 via-red-700 to-red-500 hover:opacity-90 transition shadow-lg shadow-red-900/40"
                     >
                         Créer mon compte
                     </Link>

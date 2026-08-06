@@ -10,7 +10,7 @@ export default function SeriesCard({ id, title, coverUrl }: SeriesCardProps) {
   return (
     <Link
       to={`/series/${id}`}
-      className="group relative rounded-2xl overflow-hidden bg-dark-800/70 backdrop-blur-xl border border-white/10 hover:border-purple-500/50 transition aspect-[2/3] flex flex-col shadow-lg shadow-black/20"
+      className="group relative rounded-2xl overflow-hidden bg-dark-800/70 backdrop-blur-xl border border-white/10 hover:border-red-600/50 transition aspect-[2/3] flex flex-col shadow-lg shadow-black/20"
       style={{ '--card-accent': '#7c3aed' } as React.CSSProperties}
     >
       <div className="flex-1 bg-dark-900/60 flex items-center justify-center relative overflow-hidden">

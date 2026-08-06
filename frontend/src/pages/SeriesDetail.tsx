@@ -188,7 +188,7 @@ export default function SeriesDetail() {
             onClick={toggleFavorite}
             className={`px-4 py-2 rounded-xl border transition text-sm font-medium ${
               isFavorite
-                ? "bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-400 border-transparent"
+                ? "bg-gradient-to-r from-red-600 via-red-700 to-red-500 border-transparent"
                 : "bg-dark-900/60 border-white/10 hover:bg-dark-700/60"
             }`}
           >
@@ -198,7 +198,7 @@ export default function SeriesDetail() {
             onClick={toggleWatchlist}
             className={`px-4 py-2 rounded-xl border transition text-sm font-medium ${
               isInWatchlist
-                ? "bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-400 border-transparent"
+                ? "bg-gradient-to-r from-red-600 via-red-700 to-red-500 border-transparent"
                 : "bg-dark-900/60 border-white/10 hover:bg-dark-700/60"
             }`}
           >
@@ -212,7 +212,7 @@ export default function SeriesDetail() {
         return (
         <div key={season.id} className="mb-8">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-lg font-semibold text-accent-500">
+            <h2 className="text-lg font-semibold text-red-500">
               Saison {season.season_number}
             </h2>
             {isOwner && (
@@ -250,7 +250,7 @@ export default function SeriesDetail() {
                 placeholder="Numero de l episode"
                 value={epNumber}
                 onChange={(e) => setEpNumber(e.target.value)}
-                className="bg-dark-900/60 border border-white/10 rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent transition"
+                className="bg-dark-900/60 border border-white/10 rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent transition"
                 required
               />
               <input
@@ -258,7 +258,7 @@ export default function SeriesDetail() {
                 placeholder="Titre (optionnel)"
                 value={epTitle}
                 onChange={(e) => setEpTitle(e.target.value)}
-                className="bg-dark-900/60 border border-white/10 rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent transition"
+                className="bg-dark-900/60 border border-white/10 rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent transition"
               />
               <div>
                 <label className="text-xs text-gray-400 mb-1 block">Fichier video</label>
@@ -266,7 +266,7 @@ export default function SeriesDetail() {
                   type="file"
                   accept="video/*"
                   onChange={(e) => setEpFile(e.target.files?.[0] || null)}
-                  className="text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-gradient-to-r file:from-fuchsia-500 file:via-purple-500 file:to-cyan-400 file:text-white hover:file:opacity-90 file:cursor-pointer cursor-pointer"
+                  className="text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-gradient-to-r file:from-red-600 file:via-red-700 file:to-red-500 file:text-white hover:file:opacity-90 file:cursor-pointer cursor-pointer"
                   required
                 />
               </div>
@@ -284,7 +284,7 @@ export default function SeriesDetail() {
               <button
                 type="submit"
                 disabled={epUploading}
-                className="bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-400 hover:opacity-90 disabled:opacity-50 transition rounded-xl py-2.5 font-semibold shadow-lg shadow-purple-900/30"
+                className="bg-gradient-to-r from-red-600 via-red-700 to-red-500 hover:opacity-90 disabled:opacity-50 transition rounded-xl py-2.5 font-semibold shadow-lg shadow-red-900/30"
               >
                 {epUploading ? "Upload en cours..." : "Ajouter l episode"}
               </button>
@@ -300,7 +300,7 @@ export default function SeriesDetail() {
                 return (
                   <div
                     key={ep.id}
-                    className="bg-dark-800/70 backdrop-blur-xl hover:border-accent-500/60 border border-white/10 rounded-2xl px-4 py-3 transition flex items-center gap-3"
+                    className="bg-dark-800/70 backdrop-blur-xl hover:border-red-600/60 border border-white/10 rounded-2xl px-4 py-3 transition flex items-center gap-3"
                   >
                     <Link
                       to={`/watch/${ep.id}`}
@@ -322,7 +322,7 @@ export default function SeriesDetail() {
                           <span className="text-xl opacity-30">?</span>
                         )}
                       </div>
-                      <span className="text-accent-500 font-mono text-sm">
+                      <span className="text-red-500 font-mono text-sm">
                         E{ep.episode_number}
                       </span>
                       <span className="flex-1">{ep.title || `Episode ${ep.episode_number}`}</span>
@@ -339,7 +339,7 @@ export default function SeriesDetail() {
                         seriesTitle,
                         seriesId: Number(id),
                       }}
-                      className="text-xs px-3 py-1.5 rounded-lg bg-purple-500/10 text-purple-400 border border-purple-500/20 hover:bg-purple-500/20 transition"
+                      className="text-xs px-3 py-1.5 rounded-lg bg-red-600/10 text-red-400 border border-red-600/20 hover:bg-red-600/20 transition"
                     >
                       Voir
                     </Link>
@@ -376,12 +376,12 @@ export default function SeriesDetail() {
             placeholder="Numero de saison"
             value={newSeasonNumber}
             onChange={(e) => setNewSeasonNumber(e.target.value)}
-            className="bg-dark-800/70 backdrop-blur-xl border border-white/10 rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent transition flex-1"
+            className="bg-dark-800/70 backdrop-blur-xl border border-white/10 rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent transition flex-1"
             required
           />
           <button
             type="submit"
-            className="bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-400 hover:opacity-90 transition rounded-xl px-4 py-2 font-semibold shadow-lg shadow-purple-900/30"
+            className="bg-gradient-to-r from-red-600 via-red-700 to-red-500 hover:opacity-90 transition rounded-xl px-4 py-2 font-semibold shadow-lg shadow-red-900/30"
           >
             Ajouter
           </button>
