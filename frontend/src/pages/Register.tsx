@@ -49,7 +49,7 @@ export default function Register() {
               Anime<span className="text-accent-500">Cloud</span>
             </h1>
             <p className="text-gray-400 text-sm mt-2">
-              Votre cloud d'anime, gratuit et partagÈ entre passionnÈs.
+              Votre cloud d'anime, gratuit et partag√© entre passionn√©s.
             </p>
           </div>
 
@@ -116,7 +116,7 @@ export default function Register() {
               disabled={loading}
               className="bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-400 hover:opacity-90 transition rounded-xl py-3 font-semibold shadow-lg shadow-purple-900/30 disabled:opacity-60"
             >
-              {loading ? "CrÈation..." : "CrÈer mon compte"}
+              {loading ? "Cr√©ation..." : "Cr√©er mon compte"}
             </button>
           </form>
 
@@ -137,7 +137,7 @@ export default function Register() {
           </a>
 
           <p className="text-center text-sm text-gray-400 mt-6">
-            DÈj‡ un compte ?{" "}
+            D√©j√† un compte ?{" "}
             <Link to="/login" className="text-accent-500 hover:underline font-medium">
               Se connecter
             </Link>

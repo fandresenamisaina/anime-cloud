@@ -16,6 +16,10 @@ export default function Profile() {
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [updatingProfile, setUpdatingProfile] = useState(false);
 
   const fetchProfile = () => {
     setLoading(true);
@@ -53,6 +57,39 @@ export default function Profile() {
       setError(err.response?.data?.message || "Erreur lors de la mise a jour de l avatar");
     } finally {
       setUploading(false);
+    }
+  };
+
+  const handleUpdateProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    
+    if (password && password !== confirmPassword) {
+      setError("Les mots de passe ne correspondent pas");
+      return;
+    }
+
+    setUpdatingProfile(true);
+    try {
+      const updateData: { username?: string; password?: string } = {};
+      if (username.trim()) updateData.username = username.trim();
+      if (password) updateData.password = password;
+
+      if (!updateData.username && !updateData.password) {
+        setError("Aucun champ a modifier");
+        setUpdatingProfile(false);
+        return;
+      }
+
+      const res = await api.put<UserProfile>("/user/profile", updateData);
+      setUser(res.data);
+      setUsername("");
+      setPassword("");
+      setConfirmPassword("");
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Erreur lors de la mise a jour du profil");
+    } finally {
+      setUpdatingProfile(false);
     }
   };
 
@@ -113,6 +150,54 @@ export default function Profile() {
             className="bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-400 hover:opacity-90 disabled:opacity-50 transition rounded-xl py-2.5 font-semibold shadow-lg shadow-purple-900/30"
           >
             {uploading ? "Envoi en cours..." : "Mettre a jour l avatar"}
+          </button>
+        </form>
+      </div>
+
+      <div className="bg-dark-800/70 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl shadow-black/40 mt-6">
+        <h2 className="text-xl font-bold mb-4">Modifier le profil</h2>
+        <form onSubmit={handleUpdateProfile} className="flex flex-col gap-4">
+          {error && (
+            <div className="bg-red-500/10 text-red-400 border border-red-500/20 p-3 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
+          <div>
+            <label className="text-xs text-gray-400 block mb-1">Nouveau nom d utilisateur</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Laisser vide pour ne pas changer"
+              className="w-full bg-dark-900/60 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+            />
+          </div>
+          <div>
+            <label className="text-xs text-gray-400 block mb-1">Nouveau mot de passe</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Laisser vide pour ne pas changer"
+              className="w-full bg-dark-900/60 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+            />
+          </div>
+          <div>
+            <label className="text-xs text-gray-400 block mb-1">Confirmer le mot de passe</label>
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Confirmer le nouveau mot de passe"
+              className="w-full bg-dark-900/60 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={updatingProfile || (!username.trim() && !password)}
+            className="bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-400 hover:opacity-90 disabled:opacity-50 transition rounded-xl py-2.5 font-semibold shadow-lg shadow-purple-900/30"
+          >
+            {updatingProfile ? "Mise a jour..." : "Mettre a jour le profil"}
           </button>
         </form>
       </div>

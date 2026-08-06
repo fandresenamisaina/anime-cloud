@@ -65,6 +65,27 @@ export const getAllSeriesAdmin = async (req: AuthRequest, res: Response) => {
   }
 };
 
+export const getAllEpisodesAdmin = async (req: AuthRequest, res: Response) => {
+  try {
+    const result = await pool.query(
+      `SELECT e.id, e.title, e.episode_number, e.video_url, e.thumbnail_url, 
+              e.duration_seconds, e.created_at, e.uploaded_by,
+              u.username as uploader_username,
+              s.title as series_title,
+              se.season_number
+       FROM episodes e
+       JOIN seasons se ON e.season_id = se.id
+       JOIN series s ON s.id = se.series_id
+       LEFT JOIN users u ON u.id = e.uploaded_by
+       ORDER BY e.created_at DESC`
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Erreur lors de la recuperation des episodes" });
+  }
+};
+
 export const adminDeleteSeries = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;

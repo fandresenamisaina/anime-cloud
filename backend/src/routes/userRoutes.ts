@@ -9,12 +9,14 @@ import {
   getWatchlist,
   updateWatchProgress,
   getWatchHistory,
+  updateProfile,
 } from "../controllers/userController";
 
 const router = Router();
 
 router.use(authMiddleware);
 
+router.put("/profile", updateProfile);
 router.get("/favorites", getFavorites);
 router.post("/favorites", addFavorite);
 router.delete("/favorites/:series_id", removeFavorite);

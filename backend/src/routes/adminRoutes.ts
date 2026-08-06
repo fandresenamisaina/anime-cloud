@@ -4,6 +4,7 @@ import {
   deleteUser,
   toggleUserAdmin,
   getAllSeriesAdmin,
+  getAllEpisodesAdmin,
   adminDeleteSeries,
   adminDeleteEpisode,
   getStats,
@@ -20,6 +21,7 @@ router.get("/users", getAllUsers);
 router.delete("/users/:id", deleteUser);
 router.put("/users/:id/toggle-admin", toggleUserAdmin);
 router.get("/series", getAllSeriesAdmin);
+router.get("/episodes", getAllEpisodesAdmin);
 router.delete("/series/:id", adminDeleteSeries);
 router.delete("/episodes/:id", adminDeleteEpisode);
 router.get("/stats", getStats);
