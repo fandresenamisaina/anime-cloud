@@ -153,7 +153,7 @@ function EpisodeRow({ episode, onDelete }: EpisodeRowProps) {
                 ×
               </button>
             </div>
-            <div className="aspect-video bg-black">
+            <div className="aspect-video bg-black relative">
               <video
                 src={streamSrc}
                 controls
@@ -165,6 +165,9 @@ function EpisodeRow({ episode, onDelete }: EpisodeRowProps) {
               >
                 Votre navigateur ne supporte pas la lecture vidéo.
               </video>
+              <p className="absolute bottom-4 left-1/2 -translate-x-1/2 text-sm text-gray-400 bg-black/60 px-4 py-2 rounded-lg backdrop-blur-sm">
+                Pour télécharger, cliquez sur les trois points verticaux
+              </p>
             </div>
           </div>
         </div>

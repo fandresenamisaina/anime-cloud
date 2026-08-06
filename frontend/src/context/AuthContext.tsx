@@ -5,6 +5,7 @@ import api from "../api/client";
 interface AuthContextType {
   token: string | null;
   userId: number | null;
+  isAdmin: boolean | null;
   login: (email: string, password: string) => Promise<void>;
   register: (username: string, email: string, password: string) => Promise<void>;
   loginWithToken: (token: string) => void;
@@ -13,13 +14,16 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-function decodeUserId(token: string | null): number | null {
-  if (!token) return null;
+function decodeToken(token: string | null): { userId: number | null; isAdmin: boolean | null } {
+  if (!token) return { userId: null, isAdmin: null };
   try {
     const payload = JSON.parse(atob(token.split(".")[1]));
-    return payload.userId ?? null;
+    return { 
+      userId: payload.userId ?? null,
+      isAdmin: payload.isAdmin ?? payload.is_admin ?? null
+    };
   } catch {
-    return null;
+    return { userId: null, isAdmin: null };
   }
 }
 
@@ -27,11 +31,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setTokenState] = useState<string | null>(
     localStorage.getItem("token")
   );
-  const [userId, setUserId] = useState<number | null>(decodeUserId(token));
+  const { userId, isAdmin } = decodeToken(token);
 
   const setToken = (newToken: string | null) => {
     setTokenState(newToken);
-    setUserId(decodeUserId(newToken));
+    const decoded = decodeToken(newToken);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    return { userId: decoded.userId, isAdmin: decoded.isAdmin };
   };
 
   const login = async (email: string, password: string) => {
@@ -57,7 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ token, userId, login, register, loginWithToken, logout }}>
+    <AuthContext.Provider value={{ token, userId, isAdmin, login, register, loginWithToken, logout }}>
       {children}
     </AuthContext.Provider>
   );

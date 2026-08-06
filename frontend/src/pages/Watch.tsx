@@ -96,7 +96,7 @@ export default function Watch() {
           </div>
         )}
       </div>
-      <div className="rounded-3xl overflow-hidden bg-black border border-white/10 shadow-2xl shadow-black/40">
+      <div className="rounded-3xl overflow-hidden bg-black border border-white/10 shadow-2xl shadow-black/40 relative">
         <video
           ref={videoRef}
           src={streamUrl}
@@ -119,6 +119,9 @@ export default function Watch() {
           )}
           Ton navigateur ne supporte pas la lecture video.
         </video>
+        <p className="absolute bottom-4 left-1/2 -translate-x-1/2 text-sm text-gray-400 bg-black/60 px-4 py-2 rounded-lg backdrop-blur-sm pointer-events-none">
+          Pour télécharger, cliquez sur les trois points verticaux
+        </p>
       </div>
       {startTime && startTime > 5 && (
         <p className="text-sm text-gray-500 mt-3">

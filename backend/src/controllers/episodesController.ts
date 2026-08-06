@@ -82,6 +82,33 @@ export const createEpisode = async (req: AuthRequest, res: Response) => {
       return res.status(400).json({ message: "season_id et episode_number sont obligatoires" });
     }
 
+    // Vérifier si l'utilisateur est admin ou s'il a créé la saison
+    const seasonResult = await pool.query(
+      `SELECT s.id, s.season_number, ser.added_by 
+       FROM seasons s 
+       JOIN series ser ON s.series_id = ser.id 
+       WHERE s.id = $1`,
+      [season_id]
+    );
+    
+    if (seasonResult.rows.length === 0) {
+      return res.status(404).json({ message: "Saison introuvable" });
+    }
+    
+    const seriesOwnerId = seasonResult.rows[0].added_by;
+    
+    // Vérifier si l'utilisateur est admin ou propriétaire de la série
+    const userResult = await pool.query(
+      "SELECT is_admin FROM users WHERE id = $1",
+      [req.userId]
+    );
+    
+    const isAdmin = userResult.rows[0]?.is_admin || false;
+    
+    if (!isAdmin && seriesOwnerId !== req.userId) {
+      return res.status(403).json({ message: "Seul le créateur de la série ou un admin peut ajouter des episodes" });
+    }
+
     const videoFile = files?.video?.[0];
     if (!videoFile) {
       return res.status(400).json({ message: "Le fichier video est obligatoire"});
