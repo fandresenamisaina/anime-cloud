@@ -1,8 +1,54 @@
 ﻿import { Response } from "express";
+import bcrypt from "bcrypt";
 import { pool } from "../config/db";
 import { AuthRequest } from "../middlewares/auth";
 
-// FAVORIS
+export const updateProfile = async (req: AuthRequest, res: Response) => {
+  try {
+    const { username, password } = req.body;
+    const userId = req.userId;
+
+    if (!username && !password) {
+      return res.status(400).json({ message: "Aucun champ a modifier" });
+    }
+
+    const updates: string[] = [];
+    const values: any[] = [];
+    let paramIndex = 1;
+
+    if (username) {
+      const existing = await pool.query(
+        "SELECT id FROM users WHERE username = $1 AND id != $2",
+        [username, userId]
+      );
+      if (existing.rows.length > 0) {
+        return res.status(409).json({ message: "Ce nom d utilisateur est deja utilise" });
+      }
+      updates.push(`username = $${paramIndex}`);
+      values.push(username);
+      paramIndex++;
+    }
+
+    if (password) {
+      const passwordHash = await bcrypt.hash(password, 10);
+      updates.push(`password_hash = $${paramIndex}`);
+      values.push(passwordHash);
+      paramIndex++;
+    }
+
+    values.push(userId);
+    const result = await pool.query(
+      `UPDATE users SET ${updates.join(", ")} WHERE id = $${paramIndex}
+       RETURNING id, username, email, avatar_url, created_at`,
+      values
+    );
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Erreur lors de la mise a jour du profil" });
+  }
+};
 
 export const addFavorite = async (req: AuthRequest, res: Response) => {
   try {

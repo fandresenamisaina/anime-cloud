@@ -48,7 +48,7 @@ export default function Login() {
               Anime<span className="text-accent-500">Cloud</span>
             </h1>
             <p className="text-gray-400 text-sm mt-2">
-              Votre cloud d'anime, gratuit et partagé entre passionnés.
+              Votre cloud d'anime, gratuit et partagÃ© entre passionnÃ©s.
             </p>
           </div>
 

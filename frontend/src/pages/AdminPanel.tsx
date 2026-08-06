@@ -20,6 +20,20 @@ interface SeriesAdmin {
   episode_count: number;
 }
 
+interface EpisodeAdmin {
+  id: number;
+  title: string | null;
+  episode_number: number;
+  video_url: string;
+  thumbnail_url: string | null;
+  duration_seconds: number | null;
+  created_at: string;
+  uploaded_by: number | null;
+  uploader_username: string | null;
+  series_title: string;
+  season_number: number;
+}
+
 interface Stats {
   totalUsers: number;
   totalSeries: number;
@@ -51,12 +65,104 @@ function formatBytes(bytes: number): string {
   return `${(bytes / (1024 * 1024 * 1024)).toFixed(2)} Go`;
 }
 
-type Tab = "users" | "content" | "storage";
+type Tab = "users" | "content" | "episodes" | "storage";
+
+interface EpisodeRowProps {
+  episode: EpisodeAdmin;
+  onDelete: () => void;
+}
+
+function EpisodeRow({ episode, onDelete }: EpisodeRowProps) {
+  const [showVideo, setShowVideo] = useState(false);
+
+  const handleDelete = () => {
+    if (!confirm(`Supprimer l episode "${episode.title || `Episode ${episode.episode_number}`}" ?`)) return;
+    api.delete(`/admin/episodes/${episode.id}`).then(() => onDelete()).catch(err => alert(err.response?.data?.message || "Erreur"));
+  };
+
+  return (
+    <>
+      <div className="bg-dark-800/70 backdrop-blur-xl border border-white/10 rounded-2xl px-4 py-3 flex items-center gap-3">
+        <div className="w-24 h-14 bg-dark-900/60 border border-white/10 rounded-lg overflow-hidden flex items-center justify-center flex-shrink-0">
+          {episode.thumbnail_url ? (
+            <img src={episode.thumbnail_url} alt={episode.title || "Episode"} className="w-full h-full object-cover" />
+          ) : (
+            <span className="text-sm opacity-30">?</span>
+          )}
+        </div>
+        <div className="flex-1">
+          <p className="font-semibold">
+            {episode.series_title} - Saison {episode.season_number} Episode {episode.episode_number}
+          </p>
+          <p className="text-xs text-gray-400">
+            {episode.title || `Episode ${episode.episode_number}`} - {episode.duration_seconds ? Math.floor(episode.duration_seconds / 60) + " min" : "N/A"}
+          </p>
+          <p className="text-xs text-gray-500">
+            Importe par {episode.uploader_username || "inconnu"} le {new Date(episode.created_at).toLocaleDateString("fr-FR")}
+          </p>
+        </div>
+        <button
+          onClick={() => setShowVideo(true)}
+          className="text-xs px-3 py-1.5 rounded-lg bg-purple-500/10 text-purple-400 border border-purple-500/20 hover:bg-purple-500/20 transition"
+        >
+          Voir
+        </button>
+        <button
+          onClick={() => {
+            const link = document.createElement("a");
+            link.href = episode.video_url;
+            link.download = `${episode.series_title}_S${episode.season_number}E${episode.episode_number}.mp4`;
+            link.click();
+          }}
+          className="text-xs px-3 py-1.5 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 hover:bg-cyan-500/20 transition"
+        >
+          Telecharger
+        </button>
+        <button
+          onClick={handleDelete}
+          className="text-xs px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition"
+        >
+          Supprimer
+        </button>
+      </div>
+
+      {showVideo && (
+        <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-dark-900 border border-white/10 rounded-2xl w-full max-w-5xl overflow-hidden">
+            <div className="flex items-center justify-between p-4 border-b border-white/10">
+              <h3 className="text-lg font-bold">
+                {episode.series_title} - S{episode.season_number}E{episode.episode_number}
+              </h3>
+              <button
+                onClick={() => setShowVideo(false)}
+                className="text-gray-400 hover:text-white text-2xl leading-none"
+              >
+                ×
+              </button>
+            </div>
+            <div className="aspect-video bg-black">
+              <video
+                src={episode.video_url}
+                controls
+                autoPlay
+                className="w-full h-full"
+                poster={episode.thumbnail_url || undefined}
+              >
+                Votre navigateur ne supporte pas la lecture vidéo.
+              </video>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
 
 export default function AdminPanel() {
   const [tab, setTab] = useState<Tab>("users");
   const [users, setUsers] = useState<User[]>([]);
   const [seriesList, setSeriesList] = useState<SeriesAdmin[]>([]);
+  const [episodesList, setEpisodesList] = useState<EpisodeAdmin[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
   const [storage, setStorage] = useState<StorageStats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -68,12 +174,14 @@ export default function AdminPanel() {
     Promise.all([
       api.get<User[]>("/admin/users"),
       api.get<SeriesAdmin[]>("/admin/series"),
+      api.get<EpisodeAdmin[]>("/admin/episodes"),
       api.get<Stats>("/admin/stats"),
       api.get<StorageStats>("/admin/storage"),
     ])
-      .then(([usersRes, seriesRes, statsRes, storageRes]) => {
+      .then(([usersRes, seriesRes, episodesRes, statsRes, storageRes]) => {
         setUsers(usersRes.data);
         setSeriesList(seriesRes.data);
+        setEpisodesList(episodesRes.data);
         setStats(statsRes.data);
         setStorage(storageRes.data);
       })
@@ -121,7 +229,8 @@ export default function AdminPanel() {
 
   const tabs: { key: Tab; label: string }[] = [
     { key: "users", label: "Utilisateurs" },
-    { key: "content", label: "Contenu" },
+    { key: "content", label: "Series" },
+    { key: "episodes", label: "Episodes" },
     { key: "storage", label: "Stockage" },
   ];
 
@@ -249,6 +358,18 @@ export default function AdminPanel() {
                   Supprimer
                 </button>
               </div>
+            ))
+          )}
+        </div>
+      )}
+
+      {tab === "episodes" && (
+        <div className="flex flex-col gap-2">
+          {episodesList.length === 0 ? (
+            <p className="text-gray-500">Aucun episode.</p>
+          ) : (
+            episodesList.map((e) => (
+              <EpisodeRow key={e.id} episode={e} onDelete={() => fetchAll()} />
             ))
           )}
         </div>
