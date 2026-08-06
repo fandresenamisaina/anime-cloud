@@ -198,6 +198,31 @@ export const getEpisodeById = async (req: Request, res: Response) => {
 export const deleteEpisode = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
+    
+    // Vérifier qui a uploadé l'épisode
+    const episodeResult = await pool.query(
+      "SELECT uploaded_by FROM episodes WHERE id = $1",
+      [id]
+    );
+    
+    if (episodeResult.rows.length === 0) {
+      return res.status(404).json({ message: "Episode introuvable" });
+    }
+    
+    const uploadedBy = episodeResult.rows[0].uploaded_by;
+    
+    // Vérifier si l'utilisateur est admin ou s'il est celui qui a uploadé
+    const userResult = await pool.query(
+      "SELECT is_admin FROM users WHERE id = $1",
+      [req.userId]
+    );
+    
+    const isAdmin = userResult.rows[0]?.is_admin || false;
+    
+    if (!isAdmin && uploadedBy !== req.userId) {
+      return res.status(403).json({ message: "Vous ne pouvez pas supprimer cet episode" });
+    }
+    
     await pool.query("DELETE FROM episodes WHERE id = $1", [id]);
     res.json({ message: "Episode supprime" });
   } catch (err) {

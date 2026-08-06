@@ -8,6 +8,7 @@ interface Episode {
   title: string;
   thumbnail_url: string | null;
   duration_seconds: number | null;
+  uploaded_by: number | null;
 }
 
 interface Season {
@@ -27,6 +28,7 @@ export default function SeriesDetail() {
   const [seasons, setSeasons] = useState<Season[]>([]);
   const [seriesTitle, setSeriesTitle] = useState("");
   const [loading, setLoading] = useState(true);
+  const [userId, setUserId] = useState<number | null>(null);
 
   const [isFavorite, setIsFavorite] = useState(false);
   const [isInWatchlist, setIsInWatchlist] = useState(false);
@@ -52,6 +54,18 @@ export default function SeriesDetail() {
       .finally(() => setLoading(false));
   };
 
+  const fetchUser = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        setUserId(payload.userId ?? null);
+      } catch {
+        setUserId(null);
+      }
+    }
+  };
+
   const fetchFavoriteWatchlistStatus = () => {
     api.get("/user/favorites").then((res) => {
       setIsFavorite(res.data.some((s: { id: number }) => s.id === Number(id)));
@@ -64,6 +78,7 @@ export default function SeriesDetail() {
   useEffect(() => {
     fetchSeries();
     fetchFavoriteWatchlistStatus();
+    fetchUser();
   }, [id]);
 
   const toggleFavorite = async () => {
@@ -274,49 +289,65 @@ export default function SeriesDetail() {
             {season.episodes.length === 0 ? (
               <p className="text-gray-500 text-sm">Aucun episode.</p>
             ) : (
-              season.episodes.map((ep) => (
-                <div
-                  key={ep.id}
-                  className="bg-dark-800/70 backdrop-blur-xl hover:border-accent-500/60 border border-white/10 rounded-2xl px-4 py-3 transition flex items-center gap-3"
-                >
-                  <Link
-                    to={`/watch/${ep.id}`}
-                    state={{
-                      episodeTitle: ep.title || `Episode ${ep.episode_number}`,
-                      seriesTitle,
-                      seriesId: Number(id),
-                    }}
-                    className="flex items-center gap-3 flex-1"
+              season.episodes.map((ep) => {
+                const canDelete = userId === ep.uploaded_by;
+                return (
+                  <div
+                    key={ep.id}
+                    className="bg-dark-800/70 backdrop-blur-xl hover:border-accent-500/60 border border-white/10 rounded-2xl px-4 py-3 transition flex items-center gap-3"
                   >
-                    <div className="w-24 aspect-video bg-dark-700 rounded-xl overflow-hidden flex items-center justify-center flex-shrink-0 border border-white/10">
-                      {ep.thumbnail_url ? (
-                        <img
-                          src={ep.thumbnail_url}
-                          alt={ep.title || `Episode ${ep.episode_number}`}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <span className="text-xl opacity-30">?</span>
-                      )}
-                    </div>
-                    <span className="text-accent-500 font-mono text-sm">
-                      E{ep.episode_number}
-                    </span>
-                    <span className="flex-1">{ep.title || `Episode ${ep.episode_number}`}</span>
-                    {ep.duration_seconds && (
-                      <span className="text-xs text-gray-500">
-                        {formatDuration(ep.duration_seconds)}
+                    <Link
+                      to={`/watch/${ep.id}`}
+                      state={{
+                        episodeTitle: ep.title || `Episode ${ep.episode_number}`,
+                        seriesTitle,
+                        seriesId: Number(id),
+                      }}
+                      className="flex items-center gap-3 flex-1"
+                    >
+                      <div className="w-24 aspect-video bg-dark-700 rounded-xl overflow-hidden flex items-center justify-center flex-shrink-0 border border-white/10">
+                        {ep.thumbnail_url ? (
+                          <img
+                            src={ep.thumbnail_url}
+                            alt={ep.title || `Episode ${ep.episode_number}`}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <span className="text-xl opacity-30">?</span>
+                        )}
+                      </div>
+                      <span className="text-accent-500 font-mono text-sm">
+                        E{ep.episode_number}
                       </span>
+                      <span className="flex-1">{ep.title || `Episode ${ep.episode_number}`}</span>
+                      {ep.duration_seconds && (
+                        <span className="text-xs text-gray-500">
+                          {formatDuration(ep.duration_seconds)}
+                        </span>
+                      )}
+                    </Link>
+                    <Link
+                      to={`/watch/${ep.id}`}
+                      state={{
+                        episodeTitle: ep.title || `Episode ${ep.episode_number}`,
+                        seriesTitle,
+                        seriesId: Number(id),
+                      }}
+                      className="text-xs px-3 py-1.5 rounded-lg bg-purple-500/10 text-purple-400 border border-purple-500/20 hover:bg-purple-500/20 transition"
+                    >
+                      Voir
+                    </Link>
+                    {canDelete && (
+                      <button
+                        onClick={() => handleDeleteEpisode(ep.id)}
+                        className="text-xs px-2 py-1 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition"
+                      >
+                        Supprimer
+                      </button>
                     )}
-                  </Link>
-                  <button
-                    onClick={() => handleDeleteEpisode(ep.id)}
-                    className="text-xs px-2 py-1 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition"
-                  >
-                    Supprimer
-                  </button>
-                </div>
-              ))
+                  </div>
+                );
+              })
             )}
           </div>
         </div>

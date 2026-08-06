@@ -67,7 +67,10 @@ export const getSeriesById = async (req: Request, res: Response) => {
     const seasons = await Promise.all(
       seasonsResult.rows.map(async (season) => {
         const episodesResult = await pool.query(
-          `SELECT * FROM episodes WHERE season_id = $1 ORDER BY episode_number ASC`,
+          `SELECT e.id, e.episode_number, e.title, e.thumbnail_url, e.duration_seconds, e.uploaded_by
+           FROM episodes e
+           WHERE e.season_id = $1
+           ORDER BY e.episode_number ASC`,
           [season.id]
         );
         return { ...season, episodes: episodesResult.rows };
