@@ -44,6 +44,27 @@ export const createSeason = async (req: AuthRequest, res: Response) => {
 export const deleteSeason = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
+    
+    // Vérifier qui a créé la saison
+    const seasonResult = await pool.query(
+      "SELECT s.added_by FROM seasons se JOIN series s ON se.series_id = s.id WHERE se.id = $1",
+      [id]
+    );
+    
+    if (seasonResult.rows.length === 0) {
+      return res.status(404).json({ message: "Saison introuvable" });
+    }
+    
+    const addedBy = seasonResult.rows[0].added_by;
+    
+    // Vérifier si l'utilisateur est admin ou s'il est le créateur de la série
+    const userResult = await pool.query("SELECT is_admin FROM users WHERE id = $1", [req.userId]);
+    const isAdmin = userResult.rows[0]?.is_admin || false;
+    
+    if (!isAdmin && addedBy !== req.userId) {
+      return res.status(403).json({ message: "Seul le créateur de la série peut supprimer des saisons" });
+    }
+    
     await pool.query("DELETE FROM seasons WHERE id = $1", [id]);
     res.json({ message: "Saison supprimee" });
   } catch (err) {
