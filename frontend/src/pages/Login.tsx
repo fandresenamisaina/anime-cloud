@@ -31,7 +31,7 @@ export default function Login() {
         <div className="bg-dark-800/70 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl shadow-black/40">
           {/* Logo */}
           <div className="flex flex-col items-center text-center mb-8">
-            <img src="/favicon.svg" alt="AnimeShare Logo" className="w-16 h-16 mb-4" />
+            <img src="/assets/logo.png" alt="AnimeShare Logo" className="w-16 h-16 mb-4" />
             <h1 className="text-2xl font-extrabold">
               Anime<span className="text-red-500">Share</span>
             </h1>
