@@ -1,11 +1,17 @@
 ﻿@import "tailwindcss";
 
+:root {
+  --primary-color: #7c3aed;
+  --secondary-color: #6d28d9;
+  --accent-color: #a855f7;
+}
+
 @theme {
   --color-dark-900: #0a0a0f;
   --color-dark-800: #12121a;
   --color-dark-700: #1a1a24;
-  --color-accent-500: #7c3aed;
-  --color-accent-600: #6d28d9;
+  --color-accent-500: var(--primary-color);
+  --color-accent-600: var(--secondary-color);
 }
 
 body {
@@ -15,8 +21,8 @@ body {
   background-image:
     linear-gradient(
       to bottom,
-      rgba(10, 10, 15, 0.55) 0%,
-      rgba(10, 10, 15, 0.75) 45%,
+      rgba(10, 10, 15, 0.7) 0%,
+      rgba(10, 10, 15, 0.85) 45%,
       rgba(10, 10, 15, 0.95) 100%
     ),
     url("./assets/site-bg.jpg");
