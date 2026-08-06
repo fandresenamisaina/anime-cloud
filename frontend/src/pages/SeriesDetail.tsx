@@ -27,6 +27,7 @@ export default function SeriesDetail() {
   const { id } = useParams();
   const [seasons, setSeasons] = useState<Season[]>([]);
   const [seriesTitle, setSeriesTitle] = useState("");
+  const [seriesOwnerId, setSeriesOwnerId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<number | null>(null);
 
@@ -49,6 +50,7 @@ export default function SeriesDetail() {
       .get(`/series/${id}`)
       .then((res) => {
         setSeriesTitle(res.data.title);
+        setSeriesOwnerId(res.data.added_by);
         setSeasons(res.data.seasons || []);
       })
       .finally(() => setLoading(false));
@@ -205,12 +207,15 @@ export default function SeriesDetail() {
         </div>
       </div>
 
-      {seasons.map((season) => (
+      {seasons.map((season) => {
+        const isOwner = userId === seriesOwnerId;
+        return (
         <div key={season.id} className="mb-8">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-lg font-semibold text-accent-500">
               Saison {season.season_number}
             </h2>
+            {isOwner && (
             <div className="flex gap-2">
               <button
                 onClick={() =>
@@ -227,9 +232,10 @@ export default function SeriesDetail() {
                 Supprimer
               </button>
             </div>
+            )}
           </div>
 
-          {uploadSeasonId === season.id && (
+          {isOwner && uploadSeasonId === season.id && (
             <form
               onSubmit={handleAddEpisode}
               className="bg-dark-800/70 backdrop-blur-xl border border-white/10 rounded-2xl p-5 mb-3 flex flex-col gap-3"
@@ -351,8 +357,10 @@ export default function SeriesDetail() {
             )}
           </div>
         </div>
-      ))}
+        );
+      })}
 
+      {userId === seriesOwnerId && (
       <div className="mt-10 pt-6 border-t border-white/10">
         <h3 className="text-sm font-semibold text-gray-400 mb-3 uppercase tracking-wider">
           Ajouter une saison
@@ -379,6 +387,7 @@ export default function SeriesDetail() {
           </button>
         </form>
       </div>
+      )}
     </div>
   );
 }
