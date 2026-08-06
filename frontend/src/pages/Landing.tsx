@@ -47,8 +47,9 @@ export default function Landing() {
         </div>
 
         <div className="relative max-w-5xl mx-auto px-6 pt-28 pb-32 flex flex-col items-center text-center">
+          <img src="/favicon.svg" alt="AnimeShare Logo" className="w-16 h-16 mb-6" />
           <span className="text-xs uppercase tracking-widest text-accent-500 font-semibold mb-4">
-            Cloud personnel d anime
+            Cloud personnel AnimeShare
           </span>
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight max-w-3xl">
             Vos animes, en ligne.
@@ -113,7 +114,7 @@ export default function Landing() {
       </section>
 
       <footer className="text-center text-gray-500 text-sm py-8 border-t border-dark-700">
-        AnimeCloud - votre cloud personnel de streaming
+        AnimeShare - votre cloud personnel de streaming
       </footer>
     </div>
   );

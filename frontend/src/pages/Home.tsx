@@ -45,7 +45,7 @@ export default function Home() {
 
                 <div className="relative z-10 max-w-4xl mx-auto pt-16 pb-20">
                     <span className="inline-block px-4 py-1.5 rounded-full text-xs tracking-widest uppercase text-purple-200/90 bg-white/5 border border-white/10 mb-8">
-                        Cloud personnel d'animes
+                        Cloud personnel AnimeShare
                     </span>
 
                     <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight">
