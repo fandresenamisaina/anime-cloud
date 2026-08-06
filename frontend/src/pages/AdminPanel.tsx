@@ -25,6 +25,7 @@ interface EpisodeAdmin {
   title: string | null;
   episode_number: number;
   video_url: string;
+  stream_url: string;
   thumbnail_url: string | null;
   duration_seconds: number | null;
   created_at: string;
@@ -74,6 +75,15 @@ interface EpisodeRowProps {
 
 function EpisodeRow({ episode, onDelete }: EpisodeRowProps) {
   const [showVideo, setShowVideo] = useState(false);
+  const [streamSrc, setStreamSrc] = useState("");
+
+  const handleWatch = () => {
+    // Construire l'URL de streaming avec le token pour l'authentification
+    const token = localStorage.getItem("token");
+    const streamUrl = `http://localhost:4000/api/stream/${episode.id}${token ? `?token=${token}` : ""}`;
+    setStreamSrc(streamUrl);
+    setShowVideo(true);
+  };
 
   const handleDelete = () => {
     if (!confirm(`Supprimer l episode "${episode.title || `Episode ${episode.episode_number}`}" ?`)) return;
@@ -102,7 +112,7 @@ function EpisodeRow({ episode, onDelete }: EpisodeRowProps) {
           </p>
         </div>
         <button
-          onClick={() => setShowVideo(true)}
+          onClick={handleWatch}
           className="text-xs px-3 py-1.5 rounded-lg bg-purple-500/10 text-purple-400 border border-purple-500/20 hover:bg-purple-500/20 transition"
         >
           Voir
@@ -110,7 +120,7 @@ function EpisodeRow({ episode, onDelete }: EpisodeRowProps) {
         <button
           onClick={() => {
             const link = document.createElement("a");
-            link.href = episode.video_url;
+            link.href = episode.stream_url;
             link.download = `${episode.series_title}_S${episode.season_number}E${episode.episode_number}.mp4`;
             link.click();
           }}
@@ -134,7 +144,10 @@ function EpisodeRow({ episode, onDelete }: EpisodeRowProps) {
                 {episode.series_title} - S{episode.season_number}E{episode.episode_number}
               </h3>
               <button
-                onClick={() => setShowVideo(false)}
+                onClick={() => {
+                  setShowVideo(false);
+                  setStreamSrc("");
+                }}
                 className="text-gray-400 hover:text-white text-2xl leading-none"
               >
                 ×
@@ -142,11 +155,13 @@ function EpisodeRow({ episode, onDelete }: EpisodeRowProps) {
             </div>
             <div className="aspect-video bg-black">
               <video
-                src={episode.video_url}
+                src={streamSrc}
                 controls
                 autoPlay
                 className="w-full h-full"
                 poster={episode.thumbnail_url || undefined}
+                preload="metadata"
+                playsInline
               >
                 Votre navigateur ne supporte pas la lecture vidéo.
               </video>
