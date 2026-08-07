@@ -2,51 +2,10 @@
 # Dependencies
 node_modules/
 
-# Build outputs
-dist/
-build/
-target/
-
-# TypeScript/JavaScript specific
-*.js.map
-*.tsbuildinfo
-.cache/
-
-# Logs
+# Logs and temp files
 *.log
 
-# Environment variables
+# Environment
 .env
-.env.local
-*.env.*
-
-# IDE files
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# OS generated files
-.DS_Store
-Thumbs.db
-
-# Coverage reports
-coverage/
-htmlcov/
-*.coverage
-
-# Python related (if applicable)
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-*.so
-*.egg-info/
-.eggs/
-
-# Temporary files
-*.tmp
-*.temp
-*~
+*.env
 ```
