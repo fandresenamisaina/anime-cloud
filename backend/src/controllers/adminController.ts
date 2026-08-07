@@ -79,13 +79,13 @@ export const getAllEpisodesAdmin = async (req: AuthRequest, res: Response) => {
        LEFT JOIN users u ON u.id = e.uploaded_by
        ORDER BY e.created_at DESC`
     );
-    
+
     // Convertir les URLs MinIO en URLs de streaming
     const episodesWithStreamUrl = result.rows.map((episode: any) => ({
       ...episode,
       stream_url: `http://localhost:4000/api/stream/${episode.id}`
     }));
-    
+
     res.json(episodesWithStreamUrl);
   } catch (err) {
     console.error(err);
@@ -135,20 +135,29 @@ export const getStats = async (req: AuthRequest, res: Response) => {
   }
 };
 
+// Récupère la taille d'un bucket. Si MinIO est injoignable (down, mauvaise
+// config, credentials invalides, etc.), on ne fait pas planter toute la
+// route /admin/storage : on renvoie juste des valeurs à zéro pour ce bucket
+// et on logge l'erreur côté serveur pour debug.
 async function getBucketSize(bucket: string): Promise<{ count: number; sizeBytes: number }> {
   let count = 0;
   let sizeBytes = 0;
   let continuationToken: string | undefined = undefined;
-  do {
-    const result: any = await s3Client.send(
-      new ListObjectsV2Command({ Bucket: bucket, ContinuationToken: continuationToken })
-    );
-    (result.Contents || []).forEach((obj: any) => {
-      count += 1;
-      sizeBytes += obj.Size || 0;
-    });
-    continuationToken = result.IsTruncated ? result.NextContinuationToken : undefined;
-  } while (continuationToken);
+  try {
+    do {
+      const result: any = await s3Client.send(
+        new ListObjectsV2Command({ Bucket: bucket, ContinuationToken: continuationToken })
+      );
+      (result.Contents || []).forEach((obj: any) => {
+        count += 1;
+        sizeBytes += obj.Size || 0;
+      });
+      continuationToken = result.IsTruncated ? result.NextContinuationToken : undefined;
+    } while (continuationToken);
+  } catch (err) {
+    console.error(`Stockage indisponible pour le bucket "${bucket}":`, (err as Error).message);
+    return { count: 0, sizeBytes: 0 };
+  }
   return { count, sizeBytes };
 }
 
