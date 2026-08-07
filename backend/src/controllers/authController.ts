@@ -1,4 +1,4 @@
-﻿import { Request, Response } from "express";
+import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
@@ -9,6 +9,7 @@ import { AuthRequest } from "../middlewares/auth";
 
 const JWT_SECRET = process.env.JWT_SECRET || "secret_par_defaut";
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
+const MINIO_PUBLIC_URL = process.env.MINIO_ENDPOINT || "http://localhost:9000";
 
 export const register = async (req: AuthRequest, res: Response) => {
   try {
@@ -40,7 +41,7 @@ export const register = async (req: AuthRequest, res: Response) => {
           ContentType: req.file.mimetype,
         })
       );
-      avatarUrl = `http://localhost:9000/${BUCKET_AVATARS}/${key}`;
+      avatarUrl = `${MINIO_PUBLIC_URL}/${BUCKET_AVATARS}/${key}`;
     }
 
     const result = await pool.query(
@@ -129,7 +130,7 @@ export const updateAvatar = async (req: AuthRequest, res: Response) => {
         ContentType: req.file.mimetype,
       })
     );
-    const avatarUrl = `http://localhost:9000/${BUCKET_AVATARS}/${key}`;
+    const avatarUrl = `${MINIO_PUBLIC_URL}/${BUCKET_AVATARS}/${key}`;
 
     const result = await pool.query(
       `UPDATE users SET avatar_url = $1 WHERE id = $2
