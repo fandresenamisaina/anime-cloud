@@ -1,4 +1,4 @@
-﻿import multer, { RequestHandler } from "multer";
+﻿import multer from "multer";
 import { Request } from "express";
 
 const storage = multer.memoryStorage();
@@ -6,43 +6,43 @@ const storage = multer.memoryStorage();
 export const uploadAvatar = multer({
   storage,
   limits: { fileSize: 5 * 1024 * 1024 },
-  fileFilter: ((req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+  fileFilter: (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
     if (file.mimetype.startsWith("image/")) {
       cb(null, true);
     } else {
       cb(new Error("Seules les images sont autorisees"));
     }
-  }) as RequestHandler,
+  },
 });
 
 export const uploadCover = multer({
   storage,
   limits: { fileSize: 10 * 1024 * 1024 },
-  fileFilter: ((req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+  fileFilter: (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
     if (file.mimetype.startsWith("image/")) {
       cb(null, true);
     } else {
       cb(new Error("Seules les images sont autorisees"));
     }
-  }) as RequestHandler,
+  },
 });
 
 export const uploadVideo = multer({
   storage,
   limits: { fileSize: 2 * 1024 * 1024 * 1024 },
-  fileFilter: ((req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+  fileFilter: (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
     if (file.mimetype.startsWith("video/")) {
       cb(null, true);
     } else {
       cb(new Error("Seules les videos sont autorisees"));
     }
-  }) as RequestHandler,
+  },
 });
 
 export const uploadEpisodeFiles = multer({
   storage,
   limits: { fileSize: 2 * 1024 * 1024 * 1024 },
-  fileFilter: ((req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+  fileFilter: (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
     if (file.fieldname === "video") {
       if (file.mimetype.startsWith("video/")) {
         cb(null, true);
@@ -58,5 +58,5 @@ export const uploadEpisodeFiles = multer({
     } else {
       cb(new Error("Champ de fichier inconnu"));
     }
-  }) as RequestHandler,
+  },
 });
