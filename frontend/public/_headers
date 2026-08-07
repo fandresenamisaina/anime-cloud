@@ -17,7 +17,3 @@
 # All other .js files at root level
 /*.js
   Content-Type: application/javascript; charset=utf-8
-
-# Default for HTML pages
-/*
-  Content-Type: text/html; charset=utf-8
