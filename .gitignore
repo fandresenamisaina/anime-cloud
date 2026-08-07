@@ -2,31 +2,56 @@
 # Dependencies
 node_modules/
 
-# Environment
+# Build outputs
+dist/
+build/
+target/
+
+# TypeScript/JavaScript
+*.js.map
+*.tsbuildinfo
+
+# Environment variables
 .env
 .env.local
 *.env.*
 
-# Logs and temp files
+# Logs
 *.log
-*.tmp
 
-# Editors
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE files
 .vscode/
 .idea/
+*.swp
+*.swo
 
-# Python
+# Python (if applicable)
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
+.Python
+*.so
+.coverage
+htmlcov/
+.coverage.*
+.pytest_cache/
+.mypy_cache/
 
-# Build artifacts
-dist/
-build/
-*.egg-info/
+# Archives
+*.zip
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.gz
+*.rar
+*.7z
 
-# Package manager
-package-lock.json
-yarn.lock
+# Temporary files
+*.tmp
+*~
 ```

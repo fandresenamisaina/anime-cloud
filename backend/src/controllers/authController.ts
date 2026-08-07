@@ -10,7 +10,7 @@ import { AuthRequest } from "../middlewares/auth";
 const JWT_SECRET = process.env.JWT_SECRET || "secret_par_defaut";
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
 
-export const register = async (req: Request, res: Response) => {
+export const register = async (req: AuthRequest, res: Response) => {
   try {
     const { username, email, password } = req.body;
 
@@ -144,7 +144,7 @@ export const updateAvatar = async (req: AuthRequest, res: Response) => {
   }
 };
 
-export const googleCallback = (req: Request, res: Response) => {
+export const googleCallback = (req: AuthRequest, res: Response) => {
   const user = req.user as { id: number; is_admin?: boolean } | undefined;
   if (!user) {
     return res.redirect(`${FRONTEND_URL}/login`);

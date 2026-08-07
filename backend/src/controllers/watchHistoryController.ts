@@ -1,8 +1,8 @@
 ﻿import { Response } from "express";
 import { pool } from "../config/db";
-import { Request } from "express";
+import { AuthRequest } from "../middlewares/auth";
 
-export const upsertProgress = async (req: Request, res: Response) => {
+export const upsertProgress = async (req: AuthRequest, res: Response) => {
   try {
     const { episode_id, progress_seconds, completed } = req.body;
 
@@ -26,7 +26,7 @@ export const upsertProgress = async (req: Request, res: Response) => {
   }
 };
 
-export const getProgress = async (req: Request, res: Response) => {
+export const getProgress = async (req: AuthRequest, res: Response) => {
   try {
     const { episode_id } = req.params;
 
@@ -42,7 +42,7 @@ export const getProgress = async (req: Request, res: Response) => {
   }
 };
 
-export const getContinueWatching = async (req: Request, res: Response) => {
+export const getContinueWatching = async (req: AuthRequest, res: Response) => {
   try {
     const result = await pool.query(
       `SELECT wh.progress_seconds, wh.completed, wh.last_watched_at,

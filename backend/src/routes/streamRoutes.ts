@@ -4,8 +4,10 @@ import jwt from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET || "secret_par_defaut";
 
-interface AuthRequest extends Request {
+// Interface pour les requêtes avec authentification
+export interface AuthRequest extends Request {
   userId?: number;
+  isAdmin?: boolean;
 }
 
 // Auth via header OU query param (necessaire pour la balise <video>)

@@ -1,8 +1,9 @@
-import { Response, NextFunction, Request } from "express";
+import { Response, NextFunction } from "express";
+import { AuthRequest } from "./auth";
 import { pool } from "../config/db";
 
 export const adminMiddleware = async (
-  req: Request,
+  req: AuthRequest,
   res: Response,
   next: NextFunction
 ) => {
