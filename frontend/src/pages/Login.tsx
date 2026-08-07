@@ -1,6 +1,8 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -109,7 +111,7 @@ export default function Login() {
             <div className="h-px bg-white/10 flex-1" />
           </div>
 
-          <a href="http://localhost:4000/api/auth/google" className="w-full flex items-center justify-center gap-2 bg-dark-900/60 border border-white/10 rounded-xl py-3 font-medium text-gray-300 hover:bg-dark-700/60 transition">
+          <a href={`${API_URL}/api/auth/google`} className="w-full flex items-center justify-center gap-2 bg-dark-900/60 border border-white/10 rounded-xl py-3 font-medium text-gray-300 hover:bg-dark-700/60 transition">
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path
                 fill="#EA4335"
@@ -130,5 +132,3 @@ export default function Login() {
     </div>
   );
 }
-
-
