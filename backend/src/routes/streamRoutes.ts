@@ -13,7 +13,7 @@ export interface AuthRequest extends Request {
 // Auth via header OU query param (necessaire pour la balise <video>)
 function streamAuthMiddleware(req: AuthRequest, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization;
-  const queryToken = req.query.token as string;
+  const queryToken = (req.query as { token?: string }).token;
 
   const token = authHeader?.startsWith("Bearer ")
     ? authHeader.split(" ")[1]
