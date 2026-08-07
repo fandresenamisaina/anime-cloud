@@ -1,7 +1,6 @@
-﻿import { Router } from "express";
+﻿import { Router, Request, Response, NextFunction } from "express";
 import { streamEpisode } from "../controllers/streamController";
 import jwt from "jsonwebtoken";
-import { Request, Response, NextFunction } from "express";
 
 const JWT_SECRET = process.env.JWT_SECRET || "secret_par_defaut";
 
