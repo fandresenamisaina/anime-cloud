@@ -1,11 +1,12 @@
 ﻿import multer, { RequestHandler } from "multer";
+import { Request } from "express";
 
 const storage = multer.memoryStorage();
 
 export const uploadAvatar = multer({
   storage,
   limits: { fileSize: 5 * 1024 * 1024 },
-  fileFilter: ((req, file, cb) => {
+  fileFilter: ((req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
     if (file.mimetype.startsWith("image/")) {
       cb(null, true);
     } else {
@@ -17,7 +18,7 @@ export const uploadAvatar = multer({
 export const uploadCover = multer({
   storage,
   limits: { fileSize: 10 * 1024 * 1024 },
-  fileFilter: ((req, file, cb) => {
+  fileFilter: ((req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
     if (file.mimetype.startsWith("image/")) {
       cb(null, true);
     } else {
@@ -29,7 +30,7 @@ export const uploadCover = multer({
 export const uploadVideo = multer({
   storage,
   limits: { fileSize: 2 * 1024 * 1024 * 1024 },
-  fileFilter: ((req, file, cb) => {
+  fileFilter: ((req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
     if (file.mimetype.startsWith("video/")) {
       cb(null, true);
     } else {
@@ -41,7 +42,7 @@ export const uploadVideo = multer({
 export const uploadEpisodeFiles = multer({
   storage,
   limits: { fileSize: 2 * 1024 * 1024 * 1024 },
-  fileFilter: ((req, file, cb) => {
+  fileFilter: ((req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
     if (file.fieldname === "video") {
       if (file.mimetype.startsWith("video/")) {
         cb(null, true);

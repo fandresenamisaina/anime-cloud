@@ -3,7 +3,13 @@ import jwt from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET || "secret_par_defaut";
 
-export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
+// Interface pour les requêtes avec authentification
+export interface AuthRequest extends Request {
+  userId?: number;
+  isAdmin?: boolean;
+}
+
+export const authMiddleware = (req: AuthRequest, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
