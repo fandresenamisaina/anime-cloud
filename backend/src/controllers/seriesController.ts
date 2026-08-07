@@ -4,7 +4,6 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { pool } from "../config/db";
 import { s3Client, BUCKET_COVERS } from "../config/minio";
 import { AuthRequest } from "../middlewares/auth";
-
 export const createSeries = async (req: AuthRequest, res: Response) => {
   try {
     const { title, description, genre } = req.body;
@@ -36,7 +35,6 @@ export const createSeries = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ message: "Erreur lors de la creation de la serie" });
   }
 };
-
 export const getAllSeries = async (req: Request, res: Response) => {
   try {
     const search = (req.query.search as string) || "";
@@ -52,7 +50,6 @@ export const getAllSeries = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Erreur lors de la recuperation des series" });
   }
 };
-
 export const getSeriesById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -65,7 +62,7 @@ export const getSeriesById = async (req: Request, res: Response) => {
       [id]
     );
     const seasons = await Promise.all(
-      seasonsResult.rows.map(async (season) => {
+      seasonsResult.rows.map(async (season: any) => {
         const episodesResult = await pool.query(
           `SELECT e.id, e.episode_number, e.title, e.thumbnail_url, e.duration_seconds, e.uploaded_by
            FROM episodes e
@@ -82,11 +79,9 @@ export const getSeriesById = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Erreur lors de la recuperation de la serie" });
   }
 };
-
 export const deleteSeries = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
-
     const seriesResult = await pool.query("SELECT added_by FROM series WHERE id = $1", [id]);
     if (seriesResult.rows.length === 0) {
       return res.status(404).json({ message: "Serie introuvable" });
@@ -94,7 +89,6 @@ export const deleteSeries = async (req: AuthRequest, res: Response) => {
     if (seriesResult.rows[0].added_by !== req.userId) {
       return res.status(403).json({ message: "Tu ne peux supprimer que tes propres series" });
     }
-
     await pool.query("DELETE FROM series WHERE id = $1", [id]);
     res.json({ message: "Serie supprimee" });
   } catch (err) {

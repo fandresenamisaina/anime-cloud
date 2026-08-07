@@ -81,7 +81,7 @@ export const getAllEpisodesAdmin = async (req: AuthRequest, res: Response) => {
     );
     
     // Convertir les URLs MinIO en URLs de streaming
-    const episodesWithStreamUrl = result.rows.map((episode) => ({
+    const episodesWithStreamUrl = result.rows.map((episode: any) => ({
       ...episode,
       stream_url: `http://localhost:4000/api/stream/${episode.id}`
     }));
