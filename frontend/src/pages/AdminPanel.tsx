@@ -80,7 +80,7 @@ function EpisodeRow({ episode, onDelete }: EpisodeRowProps) {
   const handleWatch = () => {
     // Construire l'URL de streaming avec le token pour l'authentification
     const token = localStorage.getItem("token");
-    const streamUrl = `http://localhost:4000/api/stream/${episode.id}${token ? `?token=${token}` : ""}`;
+    const streamUrl = `${import.meta.env.VITE_API_URL || "http://localhost:4000/api"}/stream/${episode.id}${token ? `?token=${token}` : ""}`;
     setStreamSrc(streamUrl);
     setShowVideo(true);
   };

@@ -23,7 +23,7 @@ export default function Watch() {
   const [subtitleUrl, setSubtitleUrl] = useState<string | null>(null);
 
   const token = localStorage.getItem("token");
-  const streamUrl = `http://localhost:4000/api/stream/${episodeId}?token=${token}`;
+  const streamUrl = `${import.meta.env.VITE_API_URL || "http://localhost:4000/api"}/stream/${episodeId}?token=${token}`;
 
   useEffect(() => {
     api
