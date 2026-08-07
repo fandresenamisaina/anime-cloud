@@ -6,7 +6,6 @@ const urlsToCache = [
   '/assets/logo.png'
 ];
 
-// Installation du Service Worker
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -17,7 +16,6 @@ self.addEventListener('install', event => {
   );
 });
 
-// Activation et nettoyage des anciens caches
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(cacheNames => {
@@ -33,15 +31,32 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Interception des requêtes réseau
 self.addEventListener('fetch', event => {
+  const url = new URL(event.request.url);
+
+  // Ne jamais intercepter les appels vers le backend API : on laisse
+  // le navigateur les gérer normalement, sans passer par le cache.
+  if (url.origin !== self.location.origin) {
+    return;
+  }
+
+  // Ne mettre en cache que les requêtes GET (les POST/PUT/DELETE ne
+  // doivent jamais être interceptées par un cache).
+  if (event.request.method !== 'GET') {
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request)
       .then(response => {
         if (response) {
           return response;
         }
-        return fetch(event.request);
+        return fetch(event.request).catch(() => {
+          // Si le réseau échoue et qu'il n'y a rien en cache, on laisse
+          // l'erreur remonter normalement au lieu de casser silencieusement.
+          return new Response('Erreur réseau', { status: 503, statusText: 'Service indisponible' });
+        });
       })
   );
 });
