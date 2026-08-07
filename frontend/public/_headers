@@ -1,6 +1,5 @@
 /*
-  Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data: https:; connect-src 'self' https://animeshar-backend.onrender.com
-
+  Content-Security-Policy: default-src 'self'; connect-src 'self' https://animeshar-backend.onrender.com; script-src 'self'; style-src 'self' 'unsafe-inline'
 # Manifest file
 /manifest.json
   Content-Type: application/manifest+json; charset=utf-8
