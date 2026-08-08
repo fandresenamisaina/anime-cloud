@@ -1,0 +1,59 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.deleteSeason = exports.createSeason = void 0;
+const db_1 = require("../config/db");
+const createSeason = async (req, res) => {
+    try {
+        const { series_id, season_number, title } = req.body;
+        if (!series_id || !season_number) {
+            return res.status(400).json({ message: "series_id et season_number sont obligatoires" });
+        }
+        // Vérifier que l'utilisateur a créé la série
+        const seriesResult = await db_1.pool.query("SELECT added_by FROM series WHERE id = $1", [series_id]);
+        if (seriesResult.rows.length === 0) {
+            return res.status(404).json({ message: "Serie introuvable" });
+        }
+        // Vérifier si l'utilisateur est admin ou s'il est le créateur de la série
+        const userResult = await db_1.pool.query("SELECT is_admin FROM users WHERE id = $1", [req.userId]);
+        const isAdmin = userResult.rows[0]?.is_admin || false;
+        if (!isAdmin && seriesResult.rows[0].added_by !== req.userId) {
+            return res.status(403).json({ message: "Seul le créateur de la série peut ajouter des saisons" });
+        }
+        const result = await db_1.pool.query(`INSERT INTO seasons (series_id, season_number, title)
+       VALUES ($1, $2, $3)
+       RETURNING *`, [series_id, season_number, title || null]);
+        res.status(201).json(result.rows[0]);
+    }
+    catch (err) {
+        console.error(err);
+        if (err.code === "23505") {
+            return res.status(409).json({ message: "Cette saison existe deja pour cette serie" });
+        }
+        res.status(500).json({ message: "Erreur lors de la creation de la saison" });
+    }
+};
+exports.createSeason = createSeason;
+const deleteSeason = async (req, res) => {
+    try {
+        const { id } = req.params;
+        // Vérifier qui a créé la saison
+        const seasonResult = await db_1.pool.query("SELECT s.added_by FROM seasons se JOIN series s ON se.series_id = s.id WHERE se.id = $1", [id]);
+        if (seasonResult.rows.length === 0) {
+            return res.status(404).json({ message: "Saison introuvable" });
+        }
+        const addedBy = seasonResult.rows[0].added_by;
+        // Vérifier si l'utilisateur est admin ou s'il est le créateur de la série
+        const userResult = await db_1.pool.query("SELECT is_admin FROM users WHERE id = $1", [req.userId]);
+        const isAdmin = userResult.rows[0]?.is_admin || false;
+        if (!isAdmin && addedBy !== req.userId) {
+            return res.status(403).json({ message: "Seul le créateur de la série peut supprimer des saisons" });
+        }
+        await db_1.pool.query("DELETE FROM seasons WHERE id = $1", [id]);
+        res.json({ message: "Saison supprimee" });
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Erreur lors de la suppression" });
+    }
+};
+exports.deleteSeason = deleteSeason;

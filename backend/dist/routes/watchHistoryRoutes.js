@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const watchHistoryController_1 = require("../controllers/watchHistoryController");
+const auth_1 = require("../middlewares/auth");
+const router = (0, express_1.Router)();
+router.post("/", auth_1.authMiddleware, watchHistoryController_1.upsertProgress);
+router.get("/continue-watching", auth_1.authMiddleware, watchHistoryController_1.getContinueWatching);
+router.get("/:episode_id", auth_1.authMiddleware, watchHistoryController_1.getProgress);
+exports.default = router;
