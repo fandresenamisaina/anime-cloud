@@ -162,6 +162,11 @@ export default function SeriesDetail() {
 
       await api.post("/series/episodes", formData, {
         headers: { "Content-Type": "multipart/form-data" },
+        // Pas de limite de temps : un upload video + traitement ffmpeg cote serveur
+        // peut prendre plusieurs minutes. Un timeout par defaut (souvent 30-60s dans
+        // les clients axios) coupe la connexion en plein transfert, ce qui provoque
+        // une erreur "Request aborted" cote backend sans jamais renvoyer d'erreur utile.
+        timeout: 0,
       });
 
       setEpNumber("");
