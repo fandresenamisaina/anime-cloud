@@ -23,6 +23,19 @@ function formatDuration(seconds: number | null): string {
   return `${minutes} min`;
 }
 
+function getVideoDurationLocally(file: File): Promise<number> {
+  return new Promise((resolve) => {
+    const videoEl = document.createElement("video");
+    videoEl.preload = "metadata";
+    videoEl.onloadedmetadata = () => {
+      window.URL.revokeObjectURL(videoEl.src);
+      resolve(Math.round(videoEl.duration) || 0);
+    };
+    videoEl.onerror = () => resolve(0);
+    videoEl.src = URL.createObjectURL(file);
+  });
+}
+
 export default function SeriesDetail() {
   const { id } = useParams();
   const [seasons, setSeasons] = useState<Season[]>([]);
@@ -42,6 +55,8 @@ export default function SeriesDetail() {
   const [epTitle, setEpTitle] = useState("");
   const [epFile, setEpFile] = useState<File | null>(null);
   const [epSubtitleFile, setEpSubtitleFile] = useState<File | null>(null);
+  void epSubtitleFile;
+  const [epThumbnailFile, setEpThumbnailFile] = useState<File | null>(null);
   const [epError, setEpError] = useState("");
   const [epUploading, setEpUploading] = useState(false);
 
@@ -153,26 +168,50 @@ export default function SeriesDetail() {
     }
     setEpUploading(true);
     try {
-      const formData = new FormData();
-      formData.append("season_id", String(uploadSeasonId));
-      formData.append("episode_number", epNumber);
-      if (epTitle) formData.append("title", epTitle);
-      formData.append("video", epFile);
-      if (epSubtitleFile) formData.append("subtitle", epSubtitleFile);
+      const durationSeconds = await getVideoDurationLocally(epFile);
 
-      await api.post("/series/episodes", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-        // Pas de limite de temps : un upload video + traitement ffmpeg cote serveur
-        // peut prendre plusieurs minutes. Un timeout par defaut (souvent 30-60s dans
-        // les clients axios) coupe la connexion en plein transfert, ce qui provoque
-        // une erreur "Request aborted" cote backend sans jamais renvoyer d'erreur utile.
-        timeout: 0,
+      const videoUrlRes = await api.post("/series/episodes/video-upload-url", {
+        filename: epFile.name,
+      });
+      const { signedUrl: videoSignedUrl, publicUrl: videoPublicUrl } = videoUrlRes.data;
+
+      await fetch(videoSignedUrl, {
+        method: "PUT",
+        headers: { "Content-Type": epFile.type },
+        body: epFile,
+      });
+
+      let thumbnailPublicUrl: string | null = null;
+
+      if (epThumbnailFile) {
+        const thumbUrlRes = await api.post("/series/episodes/thumbnail-upload-url", {
+          filename: epThumbnailFile.name,
+        });
+        const { signedUrl: thumbSignedUrl, publicUrl: thumbPublicUrl } = thumbUrlRes.data;
+
+        await fetch(thumbSignedUrl, {
+          method: "PUT",
+          headers: { "Content-Type": epThumbnailFile.type },
+          body: epThumbnailFile,
+        });
+
+        thumbnailPublicUrl = thumbPublicUrl;
+      }
+
+      await api.post("/series/episodes", {
+        season_id: uploadSeasonId,
+        episode_number: epNumber,
+        title: epTitle || undefined,
+        video_url: videoPublicUrl,
+        thumbnail_url: thumbnailPublicUrl,
+        duration_seconds: durationSeconds,
       });
 
       setEpNumber("");
       setEpTitle("");
       setEpFile(null);
       setEpSubtitleFile(null);
+      setEpThumbnailFile(null);
       setUploadSeasonId(null);
       fetchSeries();
     } catch (err: any) {
@@ -273,6 +312,17 @@ export default function SeriesDetail() {
                   onChange={(e) => setEpFile(e.target.files?.[0] || null)}
                   className="text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-gradient-to-r file:from-red-600 file:via-red-700 file:to-red-500 file:text-white hover:file:opacity-90 file:cursor-pointer cursor-pointer"
                   required
+                />
+              </div>
+              <div>
+                <label className="text-xs text-gray-400 mb-1 block">
+                  Miniature (image, optionnel)
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setEpThumbnailFile(e.target.files?.[0] || null)}
+                  className="text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-dark-700 file:text-white hover:file:bg-dark-700/70 file:cursor-pointer cursor-pointer"
                 />
               </div>
               <div>
