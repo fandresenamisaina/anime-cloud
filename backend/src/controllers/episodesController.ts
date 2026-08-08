@@ -8,7 +8,7 @@ import ffprobePath from "ffprobe-static";
 import ffmpeg from "fluent-ffmpeg";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { pool } from "../config/db";
-import { s3Client, BUCKET_VIDEOS, BUCKET_THUMBNAILS } from "../config/minio";
+import { s3Client, BUCKET_VIDEOS, BUCKET_THUMBNAILS, MINIO_PUBLIC_URL } from "../config/minio";
 import { AuthRequest } from "../middlewares/auth";
 import { Request } from "express";
 
@@ -87,21 +87,21 @@ export const createEpisode = async (req: AuthRequest, res: Response) => {
     if (seasonResult.rows.length === 0) {
       return res.status(404).json({ message: "Saison introuvable" });
     }
-    
+
     const seriesId = seasonResult.rows[0].series_id;
     const seriesResult = await pool.query("SELECT added_by FROM series WHERE id = $1", [seriesId]);
-    
+
     // Vérifier si l'utilisateur est admin ou s'il est le créateur de la série
     const userResult = await pool.query("SELECT is_admin FROM users WHERE id = $1", [req.userId]);
     const isAdmin = userResult.rows[0]?.is_admin || false;
-    
+
     if (!isAdmin && seriesResult.rows[0].added_by !== req.userId) {
       return res.status(403).json({ message: "Seul le créateur de la série peut ajouter des episodes" });
     }
 
     const videoFile = files?.video?.[0];
     if (!videoFile) {
-      return res.status(400).json({ message: "Le fichier video est obligatoire"});
+      return res.status(400).json({ message: "Le fichier video est obligatoire" });
     }
 
     const tempDir = os.tmpdir();
@@ -124,21 +124,22 @@ export const createEpisode = async (req: AuthRequest, res: Response) => {
       thumbnailTimestamp
     );
 
-    const fixedBuffer = fs.readFileSync(tempOutputPath);
-    const thumbnailBuffer = fs.readFileSync(tempThumbnailPath);
-
     const key = `episodes/${uuidv4()}-${videoFile.originalname}`;
     const thumbnailKey = `thumbnails/${uuidv4()}.jpg`;
 
+    // Upload en streamant depuis le disque (évite de garder le fichier entier en RAM
+    // une seconde fois — important sur les instances à mémoire limitée comme Render free tier)
     await s3Client.send(
       new PutObjectCommand({
         Bucket: BUCKET_VIDEOS,
         Key: key,
-        Body: fixedBuffer,
+        Body: fs.createReadStream(tempOutputPath),
         ContentType: videoFile.mimetype,
+        ContentLength: fs.statSync(tempOutputPath).size,
       })
     );
 
+    const thumbnailBuffer = fs.readFileSync(tempThumbnailPath);
     await s3Client.send(
       new PutObjectCommand({
         Bucket: BUCKET_THUMBNAILS,
@@ -148,8 +149,9 @@ export const createEpisode = async (req: AuthRequest, res: Response) => {
       })
     );
 
-    const videoUrl = `http://localhost:9000/${BUCKET_VIDEOS}/${key}`;
-    const thumbnailUrl = `http://localhost:9000/${BUCKET_THUMBNAILS}/${thumbnailKey}`;
+    // URL publique construite depuis MINIO_PUBLIC_URL (jamais localhost en dur)
+    const videoUrl = `${MINIO_PUBLIC_URL}/${BUCKET_VIDEOS}/${key}`;
+    const thumbnailUrl = `${MINIO_PUBLIC_URL}/${BUCKET_THUMBNAILS}/${thumbnailKey}`;
 
     let subtitleUrl: string | null = null;
     const subtitleFile = files?.subtitle?.[0];
@@ -172,7 +174,7 @@ export const createEpisode = async (req: AuthRequest, res: Response) => {
         })
       );
 
-      subtitleUrl = `http://localhost:9000/${BUCKET_VIDEOS}/${subtitleKey}`;
+      subtitleUrl = `${MINIO_PUBLIC_URL}/${BUCKET_VIDEOS}/${subtitleKey}`;
     }
 
     const result = await pool.query(
@@ -215,31 +217,31 @@ export const getEpisodeById = async (req: Request, res: Response) => {
 export const deleteEpisode = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
-    
+
     // Vérifier qui a uploadé l'épisode
     const episodeResult = await pool.query(
       "SELECT uploaded_by FROM episodes WHERE id = $1",
       [id]
     );
-    
+
     if (episodeResult.rows.length === 0) {
       return res.status(404).json({ message: "Episode introuvable" });
     }
-    
+
     const uploadedBy = episodeResult.rows[0].uploaded_by;
-    
+
     // Vérifier si l'utilisateur est admin ou s'il est celui qui a uploadé
     const userResult = await pool.query(
       "SELECT is_admin FROM users WHERE id = $1",
       [req.userId]
     );
-    
+
     const isAdmin = userResult.rows[0]?.is_admin || false;
-    
+
     if (!isAdmin && uploadedBy !== req.userId) {
       return res.status(403).json({ message: "Vous ne pouvez pas supprimer cet episode" });
     }
-    
+
     await pool.query("DELETE FROM episodes WHERE id = $1", [id]);
     res.json({ message: "Episode supprime" });
   } catch (err) {

@@ -12,6 +12,12 @@ export const s3Client = new S3Client({
   forcePathStyle: true,
 });
 
+// URL publique utilisée pour construire les liens accessibles depuis le navigateur.
+// En local: http://localhost:9000
+// En production: l'URL publique de ton MinIO/S3 (ex: https://minio.tondomaine.com ou l'endpoint de ton bucket S3-compatible)
+export const MINIO_PUBLIC_URL =
+  process.env.MINIO_PUBLIC_URL || process.env.MINIO_ENDPOINT || "http://localhost:9000";
+
 export const BUCKET_AVATARS = process.env.MINIO_BUCKET_AVATARS || "avatars";
 export const BUCKET_VIDEOS = process.env.MINIO_BUCKET_VIDEOS || "videos";
 export const BUCKET_COVERS = process.env.MINIO_BUCKET_COVERS || "covers";
