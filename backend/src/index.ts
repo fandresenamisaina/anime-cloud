@@ -1,4 +1,4 @@
-﻿import express, { Request, Response } from "express";
+import express, { Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import passport from "./config/passport";
@@ -39,6 +39,8 @@ app.use("/api/user", userRoutes);
 app.use("/api/stream", streamRoutes);
 app.use("/api/watch-history", watchHistoryRoutes);
 app.use("/api/admin", adminRoutes);
+
+app.get('/health', (req, res) => { res.status(200).send('OK'); });
 
 app.listen(PORT, () => {
   console.log("Serveur backend demarre sur http://localhost:" + PORT);
