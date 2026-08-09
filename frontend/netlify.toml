@@ -1,4 +1,4 @@
-﻿[[headers]]
+[[headers]]
   for = "/*"
   [headers.values]
     Content-Security-Policy = "default-src 'self'; connect-src 'self' https://animeshar-backend.onrender.com https://esjmazekurnhakaybbdv.supabase.co; media-src 'self' blob:; img-src 'self' data: blob: https:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';"
