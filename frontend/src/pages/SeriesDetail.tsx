@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import api from "../api/client";
 
@@ -21,6 +21,13 @@ function formatDuration(seconds: number | null): string {
   if (!seconds) return "";
   const minutes = Math.floor(seconds / 60);
   return `${minutes} min`;
+}
+
+function sanitizeFileName(filename: string): string {
+  return filename
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-zA-Z0-9._-]/g, "_");
 }
 
 function getVideoDurationLocally(file: File): Promise<number> {
@@ -171,7 +178,7 @@ export default function SeriesDetail() {
       const durationSeconds = await getVideoDurationLocally(epFile);
 
       const videoUrlRes = await api.post("/series/episodes/video-upload-url", {
-        filename: epFile.name,
+        filename: sanitizeFileName(epFile.name),
       });
       const { signedUrl: videoSignedUrl, publicUrl: videoPublicUrl } = videoUrlRes.data;
 
@@ -185,7 +192,7 @@ export default function SeriesDetail() {
 
       if (epThumbnailFile) {
         const thumbUrlRes = await api.post("/series/episodes/thumbnail-upload-url", {
-          filename: epThumbnailFile.name,
+          filename: sanitizeFileName(epThumbnailFile.name),
         });
         const { signedUrl: thumbSignedUrl, publicUrl: thumbPublicUrl } = thumbUrlRes.data;
 
