@@ -1,5 +1,5 @@
 /*
-  Content-Security-Policy: default-src 'self'; connect-src 'self' https://animeshar-backend.onrender.com; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https://lh3.googleusercontent.com data:
+  Content-Security-Policy: default-src 'self'; connect-src 'self' https://animeshar-backend.onrender.com https://esjmazekurnhakaybbdv.supabase.co; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https://lh3.googleusercontent.com https://esjmazekurnhakaybbdv.supabase.co data:; media-src 'self' blob: https://animeshar-backend.onrender.com https://esjmazekurnhakaybbdv.supabase.co
 
 # Manifest file
 /manifest.json
